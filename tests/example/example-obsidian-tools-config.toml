@@ -1,0 +1,7 @@
+VAULT_PATH = "example/vault"
+
+# Media tools configuration
+TMDB_API_KEY = "i-am-a-fake-tmdb-api-key"
+
+MEDIA_DIR_PATH = "media"
+TV_SHOWS_DIR_PATH = "tv_shows"
