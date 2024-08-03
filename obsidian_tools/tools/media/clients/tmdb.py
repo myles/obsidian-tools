@@ -15,6 +15,9 @@ class TMDBAuth(AuthBase):
 
 
 class TMDBClient(HttpClient):
+    """
+    A client for The Movie Database (TMDb) API.
+    """
 
     def __init__(
         self, api_key: str, api_version: Optional[int] = None, **kwargs

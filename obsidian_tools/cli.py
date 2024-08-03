@@ -63,4 +63,7 @@ def cli(ctx: click.Context, config: Union[str, None]):
     else:
         config_file_path = Path.home() / ".obsidian-tools-config.toml"
 
+    if config_file_path.exists() is False:
+        config_file_path = Path.cwd() / "obsidian-tools-config.toml"
+
     ctx.obj["config"] = Config.from_file(config_file_path=config_file_path)
