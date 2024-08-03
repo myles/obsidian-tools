@@ -6,6 +6,7 @@ import click
 from obsidian_tools.config import Config
 from obsidian_tools.tools.media import service
 from obsidian_tools.tools.media.clients.tmdb import TMDBClient
+from obsidian_tools.tools.media.clients.openlibrary import OpenLibraryClient
 
 
 @click.group()
@@ -20,8 +21,51 @@ def cli(ctx):
 
     ctx.ensure_object(dict)
 
+    # Google Books doesn't require an API key.
+    ctx.obj["openlibrary_client"] = OpenLibraryClient()
+
     if config.TMDB_API_KEY is not None:
         ctx.obj["tmdb_client"] = TMDBClient(api_key=config.TMDB_API_KEY)
+
+
+@cli.command()
+@click.pass_context
+@click.argument("isbn", type=str)
+@click.option(
+    "-w",
+    "--write",
+    is_flag=True,
+    help="Write the file to the vault.",
+)
+def add_book(ctx: click.Context, isbn: str, write: bool):
+    """
+    Add a book to the Obsidian vault.
+    """
+    service.ensure_required_books_config(ctx.obj["config"])
+
+    client: OpenLibraryClient = ctx.obj["openlibrary_client"]
+    config: Config = ctx.obj["config"]
+
+    books_dir_path: Union[Path, None] = config.BOOKS_DIR_PATH
+
+    if books_dir_path is None:
+        raise click.ClickException(
+            "BOOKS_DIR_PATH must be set in the configuration file."
+        )
+
+    book, works, authors = service.get_book_data(isbn=isbn, client=client)
+
+    note_content = service.build_book_note(book=book, works=works, authors=authors)
+
+    if write is True:
+        note_file_path = service.write_book_note(
+            note_name=book["title"],
+            note_content=note_content,
+            config=config,
+        )
+        return click.echo(f"Book written to {note_file_path}")
+
+    click.echo(note_content)
 
 
 @cli.command()
