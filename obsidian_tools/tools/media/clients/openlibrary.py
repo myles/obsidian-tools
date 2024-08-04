@@ -1,4 +1,4 @@
-from typing import Optional, Generator, Iterable
+from typing import Generator, Iterable, Optional
 
 from requests import Session
 
@@ -53,7 +53,9 @@ class OpenLibraryClient(HttpClient):
 
         return request, response
 
-    def get_works(self, work_keys: Iterable[str], **kwargs) -> Generator[RequestReturn, None, None]:
+    def get_works(
+        self, work_keys: Iterable[str], **kwargs
+    ) -> Generator[RequestReturn, None, None]:
         """
         Get a list of works from OpenLibrary API using their keys.
         """

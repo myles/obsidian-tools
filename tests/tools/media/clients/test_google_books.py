@@ -1,6 +1,6 @@
 import responses
-from urllib.parse import quote
 from responses.matchers import query_param_matcher
+
 from obsidian_tools.tools.media.clients.google_books import GoogleBooksClient
 
 
@@ -8,10 +8,14 @@ from obsidian_tools.tools.media.clients.google_books import GoogleBooksClient
 def test_google_books_client__get_book_by_isbn(resp_google_books_volumes):
     client = GoogleBooksClient()
 
-    isbn = next(filter(
-        lambda x: x["type"] == "ISBN_13",
-        resp_google_books_volumes["items"][0]["volumeInfo"]["industryIdentifiers"]
-    ))["identifier"]
+    isbn = next(
+        filter(
+            lambda x: x["type"] == "ISBN_13",
+            resp_google_books_volumes["items"][0]["volumeInfo"][
+                "industryIdentifiers"
+            ],
+        )
+    )["identifier"]
 
     responses.add(
         responses.Response(

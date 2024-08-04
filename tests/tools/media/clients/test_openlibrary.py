@@ -1,6 +1,5 @@
 import responses
-from urllib.parse import quote
-from responses.matchers import query_param_matcher
+
 from obsidian_tools.tools.media.clients.openlibrary import OpenLibraryClient
 
 

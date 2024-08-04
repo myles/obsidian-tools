@@ -5,8 +5,8 @@ import click
 
 from obsidian_tools.config import Config
 from obsidian_tools.tools.media import service
-from obsidian_tools.tools.media.clients.tmdb import TMDBClient
 from obsidian_tools.tools.media.clients.openlibrary import OpenLibraryClient
+from obsidian_tools.tools.media.clients.tmdb import TMDBClient
 
 
 @click.group()
@@ -55,7 +55,9 @@ def add_book(ctx: click.Context, isbn: str, write: bool):
 
     book, works, authors = service.get_book_data(isbn=isbn, client=client)
 
-    note_content = service.build_book_note(book=book, works=works, authors=authors)
+    note_content = service.build_book_note(
+        book=book, works=works, authors=authors
+    )
 
     if write is True:
         note_file_path = service.write_book_note(
