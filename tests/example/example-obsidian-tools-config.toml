@@ -4,4 +4,5 @@ VAULT_PATH = "example/vault"
 TMDB_API_KEY = "i-am-a-fake-tmdb-api-key"
 
 MEDIA_DIR_PATH = "media"
+BOOKS_DIR_PATH = "books"
 TV_SHOWS_DIR_PATH = "tv_shows"

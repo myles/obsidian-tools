@@ -13,6 +13,7 @@ class Config:
     TMDB_API_KEY: Optional[str] = None
 
     MEDIA_DIR_PATH: Optional[Path] = None
+    BOOKS_DIR_PATH: Optional[Path] = None
     TV_SHOWS_DIR_PATH: Optional[Path] = None
 
     @classmethod
@@ -33,6 +34,11 @@ class Config:
         if "MEDIA_DIR_PATH" in config:
             config["MEDIA_DIR_PATH"] = (
                 config["VAULT_PATH"] / config["MEDIA_DIR_PATH"]
+            )
+
+        if "BOOKS_DIR_PATH" in config:
+            config["BOOKS_DIR_PATH"] = (
+                config["MEDIA_DIR_PATH"] / config["BOOKS_DIR_PATH"]
             )
 
         if "TV_SHOWS_DIR_PATH" in config:

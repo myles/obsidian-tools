@@ -1,8 +1,9 @@
 ---
 name: "{{ tv_series.name }}"
 type: "TV Show"
-tmdb_id: {{ tv_series.id }}
+tmdb_id: "{{ tv_series.id }}"
 ---
+
 ![{{ tv_series.name }}](https://image.tmdb.org/t/p/original{{ tv_series.poster_path }})
 
 {{ tv_series.overview }}

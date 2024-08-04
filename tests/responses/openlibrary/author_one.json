@@ -1,0 +1,31 @@
+{
+  "bio": {
+    "type": "/type/text",
+    "value": "Amal El-Mohtar is a Canadian poet and writer of speculative fiction."
+  },
+  "name": "Amal El-Mohtar",
+  "birth_date": "13 December 1984",
+  "key": "/authors/OL7313207A",
+  "remote_ids": {
+    "wikidata": "Q20631001",
+    "isni": "000000035992733X",
+    "goodreads": "4175512",
+    "storygraph": "97893883-e2d4-4358-852c-f36f79d51cf5",
+    "viaf": "220478700",
+    "amazon": "B004LSTMT2",
+    "librarything": "elmohtaramal"
+  },
+  "type": { "key": "/type/author" },
+  "source_records": ["amazon:2354088450"],
+  "alternate_names": ["Amal EL MOHTAR"],
+  "latest_revision": 3,
+  "revision": 3,
+  "created": {
+    "type": "/type/datetime",
+    "value": "2016-10-14T07:27:10.840850"
+  },
+  "last_modified": {
+    "type": "/type/datetime",
+    "value": "2023-09-19T16:17:34.113544"
+  }
+}
