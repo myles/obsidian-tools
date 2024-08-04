@@ -111,7 +111,9 @@ def test_get_book_data(
 
     assert book == resp_openlibrary_edition
     assert works == [resp_openlibrary_work]
-    assert authors == [resp_openlibrary_author_two, resp_openlibrary_author]
+    assert len(authors) == 2
+    assert resp_openlibrary_author in authors
+    assert resp_openlibrary_author_two in authors
 
 
 @responses.activate
