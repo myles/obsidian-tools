@@ -12,7 +12,7 @@ class Config:
     # Media tools configuration
     TMDB_API_KEY: Optional[str] = None
 
-    MEDIA_DIR_PATH: Optional[Path] = None
+    LIBRARY_DIR_PATH: Optional[Path] = None
     BOOKS_DIR_PATH: Optional[Path] = None
     TV_SHOWS_DIR_PATH: Optional[Path] = None
 
@@ -31,19 +31,19 @@ class Config:
                 "VAULT_PATH must be set in the configuration file."
             )
 
-        if "MEDIA_DIR_PATH" in config:
-            config["MEDIA_DIR_PATH"] = (
-                config["VAULT_PATH"] / config["MEDIA_DIR_PATH"]
+        if "LIBRARY_DIR_PATH" in config:
+            config["LIBRARY_DIR_PATH"] = (
+                config["VAULT_PATH"] / config["LIBRARY_DIR_PATH"]
             )
 
         if "BOOKS_DIR_PATH" in config:
             config["BOOKS_DIR_PATH"] = (
-                config["MEDIA_DIR_PATH"] / config["BOOKS_DIR_PATH"]
+                config["LIBRARY_DIR_PATH"] / config["BOOKS_DIR_PATH"]
             )
 
         if "TV_SHOWS_DIR_PATH" in config:
             config["TV_SHOWS_DIR_PATH"] = (
-                config["MEDIA_DIR_PATH"] / config["TV_SHOWS_DIR_PATH"]
+                config["LIBRARY_DIR_PATH"] / config["TV_SHOWS_DIR_PATH"]
             )
 
         return cls(**config)

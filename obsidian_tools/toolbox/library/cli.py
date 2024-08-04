@@ -4,20 +4,20 @@ from typing import Union
 import click
 
 from obsidian_tools.config import Config
-from obsidian_tools.tools.media import service
-from obsidian_tools.tools.media.clients.openlibrary import OpenLibraryClient
-from obsidian_tools.tools.media.clients.tmdb import TMDBClient
+from obsidian_tools.integrations.openlibrary import OpenLibraryClient
+from obsidian_tools.integrations.tmdb import TMDBClient
+from obsidian_tools.toolbox.library.service import books, core, tv_shows
 
 
 @click.group()
 @click.pass_context
 def cli(ctx):
     """
-    Tools for working with media files.
+    Tools for working with a digital library in an Obsidian vault.
     """
     config: Config = ctx.obj["config"]
 
-    service.ensure_required_config(config)
+    core.ensure_required_config(config)
 
     ctx.ensure_object(dict)
 
@@ -41,7 +41,7 @@ def add_book(ctx: click.Context, isbn: str, write: bool):
     """
     Add a book to the Obsidian vault.
     """
-    service.ensure_required_books_config(ctx.obj["config"])
+    books.ensure_required_books_config(ctx.obj["config"])
 
     client: OpenLibraryClient = ctx.obj["openlibrary_client"]
     config: Config = ctx.obj["config"]
@@ -53,14 +53,14 @@ def add_book(ctx: click.Context, isbn: str, write: bool):
             "BOOKS_DIR_PATH must be set in the configuration file."
         )
 
-    book, works, authors = service.get_book_data(isbn=isbn, client=client)
+    book, works, authors = books.get_book_data(isbn=isbn, client=client)
 
-    note_content = service.build_book_note(
+    note_content = books.build_book_note(
         book=book, works=works, authors=authors
     )
 
     if write is True:
-        note_file_path = service.write_book_note(
+        note_file_path = books.write_book_note(
             note_name=book["title"],
             note_content=note_content,
             config=config,
@@ -83,7 +83,7 @@ def add_tv_show(ctx: click.Context, tv_series_id: int, write: bool):
     """
     Add a TV show to the Obsidian vault.
     """
-    service.ensure_required_tv_shows_config(ctx.obj["config"])
+    tv_shows.ensure_required_tv_shows_config(ctx.obj["config"])
 
     client: TMDBClient = ctx.obj["tmdb_client"]
     config: Config = ctx.obj["config"]
@@ -95,18 +95,18 @@ def add_tv_show(ctx: click.Context, tv_series_id: int, write: bool):
             "TV_SHOWS_DIR_PATH must be set in the configuration file."
         )
 
-    tv_series, tv_seasons = service.get_tv_show_data(
+    tv_series, tv_seasons = tv_shows.get_tv_show_data(
         tv_series_id=tv_series_id,
         client=client,
     )
 
-    note_content = service.build_tv_show_note(
+    note_content = tv_shows.build_tv_show_note(
         tv_series=tv_series,
         tv_seasons=tv_seasons,
     )
 
     if write is True:
-        note_file_path = service.write_tv_show_note(
+        note_file_path = tv_shows.write_tv_show_note(
             note_name=tv_series["name"],
             note_content=note_content,
             config=config,

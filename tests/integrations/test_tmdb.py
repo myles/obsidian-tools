@@ -1,7 +1,7 @@
 import responses
 from requests import Request
 
-from obsidian_tools.tools.media.clients.tmdb import TMDBAuth, TMDBClient
+from obsidian_tools.integrations.tmdb import TMDBAuth, TMDBClient
 
 
 def test_tmdb_auth():

@@ -1,6 +1,6 @@
 import responses
 
-from obsidian_tools.tools.media.clients.openlibrary import OpenLibraryClient
+from obsidian_tools.integrations.openlibrary import OpenLibraryClient
 
 
 @responses.activate

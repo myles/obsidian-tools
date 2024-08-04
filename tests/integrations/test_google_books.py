@@ -1,7 +1,7 @@
 import responses
 from responses.matchers import query_param_matcher
 
-from obsidian_tools.tools.media.clients.google_books import GoogleBooksClient
+from obsidian_tools.integrations.google_books import GoogleBooksClient
 
 
 @responses.activate

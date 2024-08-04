@@ -8,7 +8,7 @@ from obsidian_tools.config import Config
 
 class ObsidianToolsCLI(click.MultiCommand):
 
-    tools_dir_path = Path(__file__).parent / "tools"
+    tools_dir_path = Path(__file__).parent / "toolbox"
 
     def list_commands(self, ctx: click.Context) -> List[str]:
         rv = []
