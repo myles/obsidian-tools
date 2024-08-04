@@ -1,0 +1,32 @@
+{
+  "publishers": ["Simon and Schuster"],
+  "number_of_pages": 208,
+  "classifications": {},
+  "source_records": [
+    "bwb:9781534431003",
+    "promise:bwb_daily_pallets_2022-06-30"
+  ],
+  "title": "This Is How You Lose the Time War",
+  "identifiers": {},
+  "isbn_13": ["9781534431003"],
+  "covers": [9255920],
+  "edition_name": "first edition",
+  "languages": [{ "key": "/languages/eng" }],
+  "publish_date": "July 16, 2019",
+  "key": "/books/OL27901088M",
+  "publish_places": ["New York, USA"],
+  "works": [{ "key": "/works/OL20639540W" }],
+  "type": { "key": "/type/edition" },
+  "lc_classifications": ["PR9199.4.E424T48"],
+  "local_id": ["urn:bwbsku:W7-ABZ-333"],
+  "latest_revision": 15,
+  "revision": 15,
+  "created": {
+    "type": "/type/datetime",
+    "value": "2020-01-23T19:22:55.288755"
+  },
+  "last_modified": {
+    "type": "/type/datetime",
+    "value": "2022-12-05T00:51:42.289242"
+  }
+}

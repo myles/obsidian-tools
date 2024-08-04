@@ -1,0 +1,42 @@
+{
+  "description": {
+    "type": "/type/text",
+    "value": "Two time-traveling agents from warring futures, working their way through the past, begin to exchange letters\u2014and fall in love in this thrilling and romantic book from award-winning authors Amal El-Mohtar and Max Gladstone.\r\n\r\nIn the ashes of a dying world, Red finds a letter marked \u201cBurn beforereading. Signed, Blue.\u201d\r\n\r\nSo begins an unlikely correspondence between two rival agents in a war that stretches through the vast reaches of time and space.\r\n\r\nRed belongs to the Agency, a post-singularity technotopia. Blue belongs to Garden, a single vast consciousness embedded in all organic matter. Their pasts are bloody and their futures mutually exclusive. They have nothing in common\u2014save that they\u2019re the best, and they\u2019re alone.\r\n\r\nNow what began as a battlefield boast grows into a dangerous game, one both Red and Blue are determined to win. Because winning\u2019s what you do in war. Isn\u2019t it?\r\n\r\nA tour de force collaboration from two powerhouse writers that spans the whole of time and space."
+  },
+  "title": "This Is How You Lose the Time War",
+  "covers": [10087837, 12370596],
+  "subject_places": ["London", "Atlantis"],
+  "subjects": [
+    "science fiction",
+    "time-traveling",
+    "epistolary",
+    "LGBT",
+    "English literature",
+    "Fiction, science fiction, general",
+    "nyt:trade-fiction-paperback=2023-05-28",
+    "New York Times bestseller"
+  ],
+  "key": "/works/OL20639540W",
+  "authors": [
+    {
+      "type": { "key": "/type/author_role" },
+      "author": { "key": "/authors/OL7313207A" }
+    },
+    {
+      "type": { "key": "/type/author_role" },
+      "author": { "key": "/authors/OL7129451A" }
+    }
+  ],
+  "subject_times": ["The whole of time and space"],
+  "type": { "key": "/type/work" },
+  "latest_revision": 8,
+  "revision": 8,
+  "created": {
+    "type": "/type/datetime",
+    "value": "2020-01-23T19:22:55.288755"
+  },
+  "last_modified": {
+    "type": "/type/datetime",
+    "value": "2023-09-19T16:18:52.047328"
+  }
+}

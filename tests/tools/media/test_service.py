@@ -20,6 +20,20 @@ def test_ensure_required_config(vault_path):
     assert str(exc_info.value.config_key) == "MEDIA_DIR_PATH"
 
 
+def test_ensure_required_books_config(vault_path):
+    good_config = Config(
+        VAULT_PATH=vault_path,
+        BOOKS_DIR_PATH=vault_path / "media" / "books",
+    )
+    assert service.ensure_required_books_config(good_config) is True
+
+    bad_config = Config(VAULT_PATH=vault_path)
+    with pytest.raises(ObsidianToolsConfigError) as exc_info:
+        service.ensure_required_books_config(bad_config)
+
+    assert str(exc_info.value.config_key) == "BOOKS_DIR_PATH"
+
+
 def test_ensure_required_tv_shows_config(vault_path):
     good_config = Config(
         VAULT_PATH=vault_path,
@@ -44,6 +58,60 @@ def test_ensure_required_tv_shows_config(vault_path):
         service.ensure_required_tv_shows_config(bad_config)
 
     assert str(exc_info.value.config_key) == "TMDB_API_KEY"
+
+
+@responses.activate
+def test_get_book_data(
+    resp_openlibrary_author,
+    resp_openlibrary_author_two,
+    resp_openlibrary_edition,
+    resp_openlibrary_work,
+):
+    client = service.OpenLibraryClient()
+
+    isbn = resp_openlibrary_edition["isbn_13"][0]
+    author_one_key = resp_openlibrary_author["key"].replace("/authors/", "")
+    author_two_key = resp_openlibrary_author_two["key"].replace("/authors/", "")
+    work_key = resp_openlibrary_work["key"].replace("/works/", "")
+
+    responses.add(
+        responses.Response(
+            method=responses.GET,
+            url=f"https://openlibrary.org/isbn/{isbn}.json",
+            json=resp_openlibrary_edition,
+            status=200,
+        )
+    )
+    responses.add(
+        responses.Response(
+            method=responses.GET,
+            url=f"https://openlibrary.org/authors/{author_one_key}.json",
+            json=resp_openlibrary_author,
+            status=200,
+        )
+    )
+    responses.add(
+        responses.Response(
+            method=responses.GET,
+            url=f"https://openlibrary.org/authors/{author_two_key}.json",
+            json=resp_openlibrary_author_two,
+            status=200,
+        )
+    )
+    responses.add(
+        responses.Response(
+            method=responses.GET,
+            url=f"https://openlibrary.org/works/{work_key}.json",
+            json=resp_openlibrary_work,
+            status=200,
+        )
+    )
+
+    book, works, authors = service.get_book_data(isbn=isbn, client=client)
+
+    assert book == resp_openlibrary_edition
+    assert works == [resp_openlibrary_work]
+    assert authors == [resp_openlibrary_author_two, resp_openlibrary_author]
 
 
 @responses.activate

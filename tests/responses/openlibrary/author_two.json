@@ -1,0 +1,16 @@
+{
+  "name": "Max Gladstone",
+  "personal_name": "Max Gladstone",
+  "created": {
+    "type": "/type/datetime",
+    "value": "2012-05-23T10:22:07.340670"
+  },
+  "last_modified": {
+    "type": "/type/datetime",
+    "value": "2012-05-23T10:22:07.340670"
+  },
+  "latest_revision": 1,
+  "key": "/authors/OL7129451A",
+  "type": { "key": "/type/author" },
+  "revision": 1
+}

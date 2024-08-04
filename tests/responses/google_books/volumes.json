@@ -1,0 +1,75 @@
+{
+  "kind": "books#volumes",
+  "totalItems": 1,
+  "items": [
+    {
+      "kind": "books#volume",
+      "id": "0OidDwAAQBAJ",
+      "etag": "CIqSfVcJp2M",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/0OidDwAAQBAJ",
+      "volumeInfo": {
+        "title": "This Is How You Lose the Time War",
+        "authors": ["Amal El-Mohtar", "Max Gladstone"],
+        "publisher": "Gallery / Saga Press",
+        "publishedDate": "2019-07-16",
+        "description": "Two time-traveling agents from warring futures, working their way through the past, begin to exchange letters—and fall in love in this thrilling and romantic book from award-winning authors Amal El-Mohtar and Max Gladstone. In the ashes of a dying world, Red finds a letter marked “Burn before reading. Signed, Blue.” So begins an unlikely correspondence between two rival agents in a war that stretches through the vast reaches of time and space. Red belongs to the Agency, a post-singularity technotopia. Blue belongs to Garden, a single vast consciousness embedded in all organic matter. Their pasts are bloody and their futures mutually exclusive. They have nothing in common—save that they’re the best, and they’re alone. Now what began as a battlefield boast grows into a dangerous game, one both Red and Blue are determined to win. Because winning’s what you do in war. Isn’t it? A tour de force collaboration from two powerhouse writers that spans the whole of time and space.",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_13",
+            "identifier": "9781534431003"
+          },
+          {
+            "type": "ISBN_10",
+            "identifier": "1534431004"
+          }
+        ],
+        "readingModes": {
+          "text": false,
+          "image": false
+        },
+        "pageCount": 208,
+        "printType": "BOOK",
+        "categories": ["Fiction"],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "0.3.1.0.preview.0",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=0OidDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=0OidDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+        },
+        "language": "en",
+        "previewLink": "http://books.google.ca/books?id=0OidDwAAQBAJ&printsec=frontcover&dq=isbn:9781534431003&hl=&cd=1&source=gbs_api",
+        "infoLink": "http://books.google.ca/books?id=0OidDwAAQBAJ&dq=isbn:9781534431003&hl=&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/This_Is_How_You_Lose_the_Time_War.html?hl=&id=0OidDwAAQBAJ"
+      },
+      "saleInfo": {
+        "country": "CA",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "CA",
+        "viewability": "PARTIAL",
+        "embeddable": true,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED_FOR_ACCESSIBILITY",
+        "epub": {
+          "isAvailable": false
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=0OidDwAAQBAJ&hl=&source=gbs_api",
+        "accessViewStatus": "SAMPLE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "Two time-traveling agents from warring futures, working their way through the past, begin to exchange letters—and fall in love in this thrilling and romantic book from award-winning authors Amal El-Mohtar and Max Gladstone."
+      }
+    }
+  ]
+}

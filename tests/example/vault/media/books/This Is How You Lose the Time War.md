@@ -5,6 +5,8 @@ authors:
   - "Amal El-Mohtar"
   - "Max Gladstone"
 number_of_pages: 208
+isbn_13: "9781534431003"
+
 ---
 ![This Is How You Lose the Time War](https://covers.openlibrary.org/b/olid/OL27901088M-L.jpg)
 
