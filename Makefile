@@ -10,6 +10,10 @@ setup: pyproject.toml
 test:
 	poetry run pytest --cov=obsidian_tools/ --cov-report=xml
 
+.PHONY: shell
+shell:
+	poetry run bpython
+
 .PHONY: coverage.xml
 coverage.xml: test
 
@@ -29,6 +33,12 @@ lintfix:
 	poetry run black .
 	poetry run isort .
 	poetry run ruff check . --fix
+
+.PHONY: prettier
+prettier:
+	npx \
+		--package prettier \
+		--call 'prettier --write obsidian_tools/templates tests/responses'
 
 .PHONY: mypy
 mypy:
