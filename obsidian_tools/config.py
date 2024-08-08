@@ -16,6 +16,15 @@ class Config:
     BOOKS_DIR_PATH: Optional[Path] = None
     TV_SHOWS_DIR_PATH: Optional[Path] = None
 
+    # Bullet journal configuration
+    BUJO_DIR_PATH: Optional[Path] = None
+
+    BUJO_MONTHLY_LOG_DIR_PATH: Optional[Path] = None
+    BUJO_MONTHLY_LOG_FILE_PATH_TPL: Optional[str] = None
+
+    BUJO_DAILY_LOG_DIR_PATH: Optional[Path] = None
+    BUJO_DAILY_LOG_FILE_PATH_TPL: Optional[str] = None
+
     @classmethod
     def from_file(cls, config_file_path: Path):
         config = {}
@@ -44,6 +53,16 @@ class Config:
         if "TV_SHOWS_DIR_PATH" in config:
             config["TV_SHOWS_DIR_PATH"] = (
                 config["LIBRARY_DIR_PATH"] / config["TV_SHOWS_DIR_PATH"]
+            )
+
+        if "BUJO_DIR_PATH" in config:
+            config["BUJO_DIR_PATH"] = (
+                config["VAULT_PATH"] / config["BUJO_DIR_PATH"]
+            )
+
+        if "BUJO_MONTHLY_LOG_DIR_PATH" in config:
+            config["BUJO_MONTHLY_LOG_DIR_PATH"] = (
+                config["BUJO_DIR_PATH"] / config["BUJO_MONTHLY_LOG_DIR_PATH"]
             )
 
         return cls(**config)

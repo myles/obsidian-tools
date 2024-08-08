@@ -8,6 +8,7 @@ include = ["obsidian_tools/templates/*"]
 
 [tool.poetry.dependencies]
 python = "^3.11"
+arrow = "^1.3.0"
 click = "^8.1.7"
 jinja2 = "^3.1.4"
 requests = "^2.32.3"
