@@ -65,11 +65,16 @@ class Config:
                 config = tomllib.load(file_obj)
 
         if "VAULT_PATH" in config:
-            config["VAULT_PATH"] = Path(config["VAULT_PATH"])
+            vault_path = Path(config["VAULT_PATH"])
         else:
             raise ValueError(
                 "VAULT_PATH must be set in the configuration file."
             )
+
+        if vault_path.is_absolute() is True:
+            config["VAULT_PATH"] = vault_path
+        else:
+            config["VAULT_PATH"] = config_file_path.parent / vault_path
 
         config["OBSIDIAN"] = ObsidianConfig.from_vault(config["VAULT_PATH"])
 
@@ -92,5 +97,16 @@ class Config:
             config["TV_SHOWS_DIR_PATH"] = (
                 config["LIBRARY_DIR_PATH"] / config["TV_SHOWS_DIR_PATH"]
             )
+
+        safe_keys = (
+            "VAULT_PATH",
+            "TMDB_API_KEY",
+            "LIBRARY_DIR_PATH",
+            "BOOKS_DIR_PATH",
+            "TV_SHOWS_DIR_PATH",
+        )
+        to_remove = [key for key in config.keys() if key not in safe_keys]
+        for key in to_remove:
+            config.pop(key)
 
         return cls(**config)
