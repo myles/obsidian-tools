@@ -51,11 +51,13 @@ class Config:
     MONTHLY_NOTE_FOLDER: Optional[Path] = None
 
     # Media tools configuration
+    DISCOGS_PERSONAL_ACCESS_TOKEN: Optional[str] = None
     TMDB_API_KEY: Optional[str] = None
 
     LIBRARY_DIR_PATH: Optional[Path] = None
     BOOKS_DIR_PATH: Optional[Path] = None
     TV_SHOWS_DIR_PATH: Optional[Path] = None
+    MOVIES_DIR_PATH: Optional[Path] = None
 
     @classmethod
     def from_file(cls, config_file_path: Path):
@@ -99,16 +101,12 @@ class Config:
                 config["LIBRARY_DIR_PATH"] / config["TV_SHOWS_DIR_PATH"]
             )
 
-        safe_keys = (
-            "VAULT_PATH",
-            "OBSIDIAN",
-            "MONTHLY_NOTE_FOLDER",
-            "MONTHLY_NOTE_FORMAT",
-            "TMDB_API_KEY",
-            "LIBRARY_DIR_PATH",
-            "BOOKS_DIR_PATH",
-            "TV_SHOWS_DIR_PATH",
-        )
+        if "MOVIES_DIR_PATH" in config:
+            config["MOVIES_DIR_PATH"] = (
+                config["LIBRARY_DIR_PATH"] / config["MOVIES_DIR_PATH"]
+            )
+
+        safe_keys = list(cls.__annotations__.keys())
         to_remove = [key for key in config.keys() if key not in safe_keys]
         for key in to_remove:
             config.pop(key)
