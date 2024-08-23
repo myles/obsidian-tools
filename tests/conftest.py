@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
-
+from obsidian_tools.config import Config, ObsidianConfig
+from dataclasses import replace
 import pytest
 
 EXAMPLE_DIR_PATH = Path(__file__).parent / "example"
@@ -10,6 +11,25 @@ RESPONSES_DIR_PATH = Path(__file__).parent / "responses"
 @pytest.fixture
 def vault_path():
     return EXAMPLE_DIR_PATH / "vault"
+
+
+@pytest.fixture
+def mock_config(vault_path):
+    return Config(VAULT_PATH=vault_path, OBSIDIAN=ObsidianConfig())
+
+
+@pytest.fixture
+def mock_config_for_bujo(mock_config):
+    return replace(
+        mock_config,
+        MONTHLY_NOTE_FORMAT="YYYY-MM",
+        MONTHLY_NOTE_FOLDER=mock_config.VAULT_PATH / "monthly-logs",
+        OBSIDIAN=ObsidianConfig(
+            core_plugins_enabled=["daily-notes"],
+            daily_note_format="YYYY-MM-DD",
+            daily_note_folder="daily-logs",
+        )
+    )
 
 
 @pytest.fixture
