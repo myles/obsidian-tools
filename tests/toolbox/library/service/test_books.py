@@ -1,11 +1,11 @@
+from dataclasses import replace
+
 import pytest
 import responses
-from dataclasses import replace
-from obsidian_tools.config import Config
+
 from obsidian_tools.errors import ObsidianToolsConfigError
 from obsidian_tools.integrations.openlibrary import OpenLibraryClient
 from obsidian_tools.toolbox.library.service import books
-from tests.conftest import mock_config
 
 
 def test_ensure_required_books_config(mock_config):

@@ -1,8 +1,10 @@
-import click
 import datetime
+
+import click
+
 from obsidian_tools.config import Config
 from obsidian_tools.toolbox.bujo import service
-from obsidian_tools.utils.decorators import write_option, write_force_option
+from obsidian_tools.utils.decorators import write_force_option, write_option
 
 
 @click.group()
@@ -39,9 +41,7 @@ def add_monthly(
     note_content = service.build_monthly_log_note(date=month, config=config)
 
     if write is True:
-        note_file_path = service.get_monthly_log_path(
-            date=month, config=config
-        )
+        note_file_path = service.get_monthly_log_path(date=month, config=config)
 
         if note_file_path.exists() and force is False:
             click.echo(

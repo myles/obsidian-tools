@@ -2,7 +2,10 @@ import datetime
 
 import pytest
 
-from obsidian_tools.errors import ObsidianToolsConfigError, ObsidianToolsPluginNotFoundError
+from obsidian_tools.errors import (
+    ObsidianToolsConfigError,
+    ObsidianToolsPluginNotFoundError,
+)
 from obsidian_tools.toolbox.bujo import service
 
 
@@ -52,4 +55,6 @@ def test_get_end_of_month():
 def test_get_monthly_log_file_path(mock_config_for_bujo):
     date = datetime.date(2024, 8, 1)
     file_path = service.get_monthly_log_file_path(date, mock_config_for_bujo)
-    assert file_path == mock_config_for_bujo.VAULT_PATH / "monthly-logs/2024-08.md"
+    assert (
+        file_path == mock_config_for_bujo.VAULT_PATH / "monthly-logs/2024-08.md"
+    )

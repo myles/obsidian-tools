@@ -5,9 +5,11 @@ Python.
 - Obsidian uses Moment.js date formats in its templates, so we have to convert
   them to Python date formats.
 """
-import re
+
 import datetime
+import re
 from typing import Union
+
 from obsidian_tools.utils.humanize import get_ordinal_suffix
 
 MONTH_TOKENS = [
@@ -46,10 +48,7 @@ DAY_OF_WEEK_ISO_TOKENS = [
     "E",
 ]
 
-WEEK_OF_YEAR_TOKENS = [
-    "wo",
-    "w"
-]
+WEEK_OF_YEAR_TOKENS = ["wo", "w"]
 
 WEEK_OF_YEAR_ISO_TOKENS = [
     "WW",
@@ -164,7 +163,9 @@ RE_ESCAPED_CHARACTERS = re.compile(r"\\(.)")
 
 class Formatter:
 
-    def __init__(self, obj: Union[datetime.date, datetime.time, datetime.datetime]):
+    def __init__(
+        self, obj: Union[datetime.date, datetime.time, datetime.datetime]
+    ):
         self.data = obj
 
     def format(self, format_str: str) -> str:
@@ -487,5 +488,8 @@ class Formatter:
         raise NotImplementedError
 
 
-def format(value: Union[datetime.date, datetime.time, datetime.datetime], format_str: str) -> str:
+def format(
+    value: Union[datetime.date, datetime.time, datetime.datetime],
+    format_str: str,
+) -> str:
     return Formatter(value).format(format_str)

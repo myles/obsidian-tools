@@ -1,5 +1,6 @@
-from obsidian_tools.utils import momentjs
 import datetime
+
+from obsidian_tools.utils import momentjs
 
 
 def test_formatter__format():

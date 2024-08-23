@@ -1,13 +1,17 @@
 import datetime
 from pathlib import Path
-from typing import List, Union, TypedDict
+from typing import List, TypedDict, Union
 
 from obsidian_tools.config import Config
 from obsidian_tools.errors import (
     ObsidianToolsConfigError,
     ObsidianToolsPluginNotFoundError,
 )
-from obsidian_tools.utils.clock import get_range_between_dates, get_end_of_month, get_start_of_month
+from obsidian_tools.utils.clock import (
+    get_end_of_month,
+    get_range_between_dates,
+    get_start_of_month,
+)
 from obsidian_tools.utils.momentjs import format
 from obsidian_tools.utils.template import render_template
 
@@ -92,8 +96,12 @@ def get_monthly_log_context(
     start_of_month = get_start_of_month(month_date)
     end_of_month = get_end_of_month(month_date)
 
-    start_of_next_month = get_start_of_month(end_of_month + datetime.timedelta(days=1))
-    start_of_previous_month = get_start_of_month(start_of_month - datetime.timedelta(days=1))
+    start_of_next_month = get_start_of_month(
+        end_of_month + datetime.timedelta(days=1)
+    )
+    start_of_previous_month = get_start_of_month(
+        start_of_month - datetime.timedelta(days=1)
+    )
 
     days = []
     for day_date in get_range_between_dates(start_of_month, end_of_month):

@@ -1,8 +1,10 @@
 import json
-from pathlib import Path
-from obsidian_tools.config import Config, ObsidianConfig
 from dataclasses import replace
+from pathlib import Path
+
 import pytest
+
+from obsidian_tools.config import Config, ObsidianConfig
 
 EXAMPLE_DIR_PATH = Path(__file__).parent / "example"
 RESPONSES_DIR_PATH = Path(__file__).parent / "responses"
@@ -28,7 +30,7 @@ def mock_config_for_bujo(mock_config):
             core_plugins_enabled=["daily-notes"],
             daily_note_format="YYYY-MM-DD",
             daily_note_folder="daily-logs",
-        )
+        ),
     )
 
 

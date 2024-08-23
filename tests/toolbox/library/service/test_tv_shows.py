@@ -1,7 +1,8 @@
+from dataclasses import replace
+
 import pytest
 import responses
-from dataclasses import replace
-from obsidian_tools.config import Config
+
 from obsidian_tools.errors import ObsidianToolsConfigError
 from obsidian_tools.integrations.tmdb import TMDBClient
 from obsidian_tools.toolbox.library.service import tv_shows
@@ -15,9 +16,7 @@ def test_ensure_required_tv_shows_config(mock_config):
     )
     assert tv_shows.ensure_required_tv_shows_config(good_config) is True
 
-    bad_config = replace(
-        mock_config, TMDB_API_KEY="i-am-a-tmdb-api-key"
-    )
+    bad_config = replace(mock_config, TMDB_API_KEY="i-am-a-tmdb-api-key")
     with pytest.raises(ObsidianToolsConfigError) as exc_info:
         tv_shows.ensure_required_tv_shows_config(bad_config)
 

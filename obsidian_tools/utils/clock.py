@@ -1,11 +1,10 @@
-from typing import List, Union
-import datetime
 import calendar
+import datetime
+from typing import List, Union
 
 
 def get_range_between_dates(
-    start_date: datetime.date,
-    end_date: datetime.date
+    start_date: datetime.date, end_date: datetime.date
 ) -> List[datetime.date]:
     """
     Get a list of dates between the start and end date.
@@ -38,6 +37,7 @@ def get_end_of_month(
     """
     Get the end of the month for the given date.
     """
-    _first_day_of_month, last_day_of_month = calendar.monthrange(date.year, date.month)
+    _first_day_of_month, last_day_of_month = calendar.monthrange(
+        date.year, date.month
+    )
     return date.replace(day=last_day_of_month)
-

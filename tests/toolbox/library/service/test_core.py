@@ -1,6 +1,7 @@
-import pytest
 from dataclasses import replace
-from obsidian_tools.config import Config
+
+import pytest
+
 from obsidian_tools.errors import ObsidianToolsConfigError
 from obsidian_tools.toolbox.library.service import core
 
