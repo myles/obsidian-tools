@@ -1,4 +1,8 @@
-VAULT_PATH = "example/vault"
+VAULT_PATH = "vault"
+
+# BuJo tools configuration
+MONTHLY_NOTE_FORMAT = "YYYY-MM"
+MONTHLY_NOTE_FOLDER = "bujo/monthly-logs"
 
 # Media tools configuration
 TMDB_API_KEY = "i-am-a-fake-tmdb-api-key"
@@ -6,3 +10,5 @@ TMDB_API_KEY = "i-am-a-fake-tmdb-api-key"
 LIBRARY_DIR_PATH = "library"
 BOOKS_DIR_PATH = "books"
 TV_SHOWS_DIR_PATH = "tv_shows"
+
+I_AM_A_RANDOM_SETTING = "look-at-me"

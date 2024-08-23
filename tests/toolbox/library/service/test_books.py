@@ -1,21 +1,22 @@
+from dataclasses import replace
+
 import pytest
 import responses
 
-from obsidian_tools.config import Config, ObsidianConfig
+from obsidia
 from obsidian_tools.errors import ObsidianToolsConfigError
 from obsidian_tools.integrations.openlibrary import OpenLibraryClient
 from obsidian_tools.toolbox.library.service import books
 
 
-def test_ensure_required_books_config(vault_path):
-    good_config = Config(
-        VAULT_PATH=vault_path,
-        OBSIDIAN=ObsidianConfig(),
-        BOOKS_DIR_PATH=vault_path / "library" / "books",
+def test_ensure_required_books_config(mock_config):
+    good_config = replace(
+        mock_config,
+        BOOKS_DIR_PATH=mock_config.VAULT_PATH / "library" / "books",
     )
     assert books.ensure_required_books_config(good_config) is True
 
-    bad_config = Config(VAULT_PATH=vault_path, OBSIDIAN=ObsidianConfig())
+    bad_config = replace(mock_config, BOOKS_DIR_PATH=None)
     with pytest.raises(ObsidianToolsConfigError) as exc_info:
         books.ensure_required_books_config(bad_config)
 

@@ -25,8 +25,29 @@ def mock_config_for_bujo(mock_config):
     return replace(
         mock_config,
         MONTHLY_NOTE_FORMAT="YYYY-MM",
+        MONTHLY_NOTE_FOLDER=mock_config.VAULT_PATH / "monthly-logs",
+        OBSIDIAN=ObsidianConfig(
+            core_plugins_enabled=["daily-notes"],
+            daily_note_format="YYYY-MM-DD",
+            daily_note_folder="daily-logs",
+        ),
+    )
+
+
+@pytest.fixture
+def mock_config_for_bujo(mock_config):
+    return replace(
+        mock_config,
+        MONTHLY_NOTE_FORMAT="YYYY-MM",
         MONTHLY_NOTE_FOLDER=mock_config.VAULT_PATH / "bujo",
     )
+
+
+@pytest.fixture
+def resp_tmdb_tv_episode_details():
+    path_obj = RESPONSES_DIR_PATH / "tmdb" / "tv-episode-details.json"
+    with path_obj.open() as file_obj:
+        return json.load(file_obj)
 
 
 @pytest.fixture

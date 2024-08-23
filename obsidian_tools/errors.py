@@ -18,3 +18,13 @@ class ObsidianToolsConfigError(ObsidianToolsError):
         super().__init__(
             f"{self.config_key} must be set in the configuration file."
         )
+
+
+class ObsidianToolsPluginNotFoundError(ObsidianToolsError):
+    """
+    Raised when a plugin is not found in the Obsidian vault.
+    """
+
+    def __init__(self, plugin_name: str):
+        self.plugin_name = plugin_name
+        super().__init__(f"{self.plugin_name} plugin not found in the vault.")
