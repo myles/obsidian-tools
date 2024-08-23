@@ -12,7 +12,6 @@ class ObsidianConfig:
 
     daily_note_format: Union[str, None] = None
     daily_note_folder: Union[str, None] = None
-    daily_note_template: Union[str, None] = None
 
     @classmethod
     def from_vault(cls, vault_path: Path):
@@ -29,8 +28,13 @@ class ObsidianConfig:
         if daily_notes_path.exists():
             with daily_notes_path.open("rb") as file_obj:
                 daily_notes_config = json.load(file_obj)
-                for key, value in daily_notes_config.items():
-                    config[f"daily_note_{key}"] = value
+
+            config["daily_note_format"] = (
+                daily_notes_config.get("format") or None
+            )
+            config["daily_note_folder"] = (
+                daily_notes_config.get("folder") or None
+            )
 
         return cls(**config)
 
@@ -65,6 +69,13 @@ class Config:
         else:
             raise ValueError(
                 "VAULT_PATH must be set in the configuration file."
+            )
+
+        config["OBSIDIAN"] = ObsidianConfig.from_vault(config["VAULT_PATH"])
+
+        if "MONTHLY_NOTE_FOLDER" in config:
+            config["MONTHLY_NOTE_FOLDER"] = (
+                config["VAULT_PATH"] / config["MONTHLY_NOTE_FOLDER"]
             )
 
         if "LIBRARY_DIR_PATH" in config:
