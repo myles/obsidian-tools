@@ -1,7 +1,7 @@
 import pytest
 import responses
 
-from obsidian_tools.config import Config
+from obsidian_tools.config import Config, ObsidianConfig
 from obsidian_tools.errors import ObsidianToolsConfigError
 from obsidian_tools.integrations.openlibrary import OpenLibraryClient
 from obsidian_tools.toolbox.library.service import books
@@ -10,11 +10,12 @@ from obsidian_tools.toolbox.library.service import books
 def test_ensure_required_books_config(vault_path):
     good_config = Config(
         VAULT_PATH=vault_path,
+        OBSIDIAN=ObsidianConfig(),
         BOOKS_DIR_PATH=vault_path / "library" / "books",
     )
     assert books.ensure_required_books_config(good_config) is True
 
-    bad_config = Config(VAULT_PATH=vault_path)
+    bad_config = Config(VAULT_PATH=vault_path, OBSIDIAN=ObsidianConfig())
     with pytest.raises(ObsidianToolsConfigError) as exc_info:
         books.ensure_required_books_config(bad_config)
 
@@ -22,7 +23,7 @@ def test_ensure_required_books_config(vault_path):
 
 
 @responses.activate
-def test_get_book_data(
+def test_get_book_data_from_openlibrary(
     resp_openlibrary_author,
     resp_openlibrary_author_two,
     resp_openlibrary_edition,
@@ -68,7 +69,9 @@ def test_get_book_data(
         )
     )
 
-    book, works, authors = books.get_book_data(isbn=isbn, client=client)
+    book, works, authors = books.get_book_data_from_openlibrary(
+        isbn=isbn, client=client
+    )
 
     assert book == resp_openlibrary_edition
     assert works == [resp_openlibrary_work]

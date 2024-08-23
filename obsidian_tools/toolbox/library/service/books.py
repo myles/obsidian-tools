@@ -1,12 +1,16 @@
+import logging
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Union, Optional
 
 from sanitize_filename import sanitize
 
 from obsidian_tools.config import Config
 from obsidian_tools.errors import ObsidianToolsConfigError
-from obsidian_tools.integrations.openlibrary import OpenLibraryClient
+from obsidian_tools.integrations import GoogleBooksClient, OpenLibraryClient
+from obsidian_tools.toolbox.library.models import Book, Person
 from obsidian_tools.utils.template import render_template
+
+logger = logging.getLogger(__name__)
 
 
 def ensure_required_books_config(config: Config) -> bool:
@@ -19,12 +23,12 @@ def ensure_required_books_config(config: Config) -> bool:
     return True
 
 
-def get_book_data(
+def get_book_data_from_openlibrary(
     isbn: str,
     client: OpenLibraryClient,
 ) -> Tuple[Dict[str, Any], List[Dict[str, Any]], List[Dict[str, Any]]]:
     """
-    Get the data for a book.
+    Get the book data from Open Library.
     """
     _, resp_book = client.get_book_from_isbn(isbn=isbn)
     book = resp_book.json()
@@ -51,17 +55,136 @@ def get_book_data(
     return book, works, authors
 
 
-def build_book_note(
-    book: Dict[str, Any],
-    works: List[Dict[str, Any]],
-    authors: List[Dict[str, Any]],
-) -> str:
+def get_book_data_from_google_books(
+    isbn: str,
+    client: GoogleBooksClient,
+) -> Union[Dict[str, Any], None]:
+    """
+    Get the book data from Google Books.
+    """
+    _, resp = client.get_book_by_isbn(isbn=isbn)
+    data = resp.json()
+
+    # Check the shape of the data.
+    if data["totalItems"] == 0:
+        return None
+    elif data["totalItems"] > 1:
+        logger.info(
+            f"Multiple books found for ISBN {isbn}. Using the first one."
+        )
+
+    return data["items"][0]
+
+
+def get_openlibrary_work_description(works_data: List[Dict[str, Any]]) -> Optional[str]:
+    """
+    Get the description from an Open Library work.
+
+    - Grab the first work that has a description.
+    - The descirption can be a string or a dictionary with a "value" key.
+    """
+    for work in works_data:
+        if "description" not in work:
+            continue
+
+        description = work["description"]
+
+        if isinstance(description, str):
+            return description
+        elif "value" in description:
+            return description["value"]
+
+    return None
+
+
+def openlibrary_book_data_to_dataclass(
+    book_data: Dict[str, Any],
+    works_data: List[Dict[str, Any]],
+    authors_data: List[Dict[str, Any]],
+) -> Book:
+    """
+    Convert the Open Library book data to a Book dataclass.
+    """
+    # Get the description from the first work that has a description.
+    description = get_openlibrary_work_description(works_data)
+
+    # ISBN is not always present.
+    isbn_13 = None
+    if "isbn_13" in book_data and book_data["isbn_13"]:
+        isbn_13 = book_data["isbn_13"][0]
+
+    cover_url = f"https://covers.openlibrary.org/b/olid/{book_data['key'].replace('/books/', '')}-L.jpg"
+
+    # Convert the authors to Person dataclasses.
+    authors = [Person(name=author["name"]) for author in authors_data]
+
+    return Book(
+        title=book_data["title"],
+        authors=authors,
+        number_of_pages=book_data.get("number_of_pages") or None,
+        description=description,
+        isbn=isbn_13,
+        cover_url=cover_url,
+        openlibrary_book_id=book_data["key"].replace("/books/", ""),
+    )
+
+
+def google_books_data_to_dataclass(book_data: Dict[str, Any]) -> Book:
+    """
+    Convert the Google Books book data to a Book dataclass.
+    """
+    # Convert the authors to Person dataclasses.
+    authors = [
+        Person(name=author) for author in book_data["volumeInfo"]["authors"]
+    ]
+
+    # Google Books doesn't always have the number of pages.
+    number_of_pages = None
+    if "pageCount" in book_data["volumeInfo"]:
+        number_of_pages = book_data["volumeInfo"]["pageCount"]
+
+    # Google Books doesn't always have a description.
+    description = None
+    if "description" in book_data["volumeInfo"]:
+        description = book_data["volumeInfo"]["description"]
+
+    # Google Books doesn't always have the ISBN.
+    isbn = None
+    if "industryIdentifiers" in book_data["volumeInfo"]:
+        isbn = next(
+            filter(
+                lambda x: x["type"] == "ISBN_13",
+                book_data["volumeInfo"]["industryIdentifiers"],
+            ),
+            None,
+        )
+        if isbn:
+            isbn = isbn["identifier"]
+
+    # Google Books doesn't always have a cover URL.
+    cover_url = None
+    if (
+        "imageLinks" in book_data["volumeInfo"]
+        and "thumbnail" in book_data["volumeInfo"]["imageLinks"]
+    ):
+        cover_url = book_data["volumeInfo"]["imageLinks"]["thumbnail"]
+
+    return Book(
+        title=book_data["volumeInfo"]["title"],
+        authors=authors,
+        number_of_pages=number_of_pages,
+        description=description,
+        isbn=isbn,
+        cover_url=cover_url,
+        google_book_id=book_data["id"],
+    )
+
+
+def build_book_note(book: Book) -> str:
     """
     Build the note for a book.
     """
-    content = render_template(
-        "library/book.md", book=book, works=works, authors=authors
-    )
+    content = render_template("library/book.md", book=book)
     return content.strip()
 
 

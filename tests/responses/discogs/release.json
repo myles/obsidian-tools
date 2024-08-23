@@ -1,0 +1,418 @@
+{
+  "id": 30392138,
+  "status": "Accepted",
+  "year": 2024,
+  "resource_url": "https://api.discogs.com/releases/30392138",
+  "uri": "https://www.discogs.com/release/30392138-Olivia-Rodrigo-Noah-Kahan-Stick-Season-Lacy",
+  "artists": [
+    {
+      "name": "Olivia Rodrigo",
+      "anv": "",
+      "join": "/",
+      "role": "",
+      "tracks": "",
+      "id": 7592689,
+      "resource_url": "https://api.discogs.com/artists/7592689",
+      "thumbnail_url": "https://i.discogs.com/1wMpnShS8lWYdizQzgFvVxLAJF4EBH6FIchzLNtawIE/rs:fit/g:sm/q:40/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTc1OTI2/ODktMTY4ODE4NDU4/My0yNDE4LmpwZWc.jpeg"
+    },
+    {
+      "name": "Noah Kahan",
+      "anv": "",
+      "join": "",
+      "role": "",
+      "tracks": "",
+      "id": 5951449,
+      "resource_url": "https://api.discogs.com/artists/5951449",
+      "thumbnail_url": "https://i.discogs.com/DF1vrrDkXrmR1TY8Fu_55oLVe1CELIy47nz8TGJpxvs/rs:fit/g:sm/q:40/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTU5NTE0/NDktMTcxMDAyMjA2/My03MTIzLmpwZWc.jpeg"
+    }
+  ],
+  "artists_sort": "Olivia Rodrigo / Noah Kahan",
+  "labels": [
+    {
+      "name": "Geffen Records",
+      "catno": "602465208375",
+      "entity_type": "1",
+      "entity_type_name": "Label",
+      "id": 821,
+      "resource_url": "https://api.discogs.com/labels/821",
+      "thumbnail_url": "https://i.discogs.com/S6eRxyNw4Oy40nibC4jcIfBFrMosEjnLj7GS-4FyTj4/rs:fit/g:sm/q:40/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTgyMS0x/MzAwODc4NDM2Lmpw/ZWc.jpeg"
+    },
+    {
+      "name": "Mercury",
+      "catno": "602465208375",
+      "entity_type": "1",
+      "entity_type_name": "Label",
+      "id": 39357,
+      "resource_url": "https://api.discogs.com/labels/39357",
+      "thumbnail_url": "https://i.discogs.com/5W4gCyESpg0nw-rEkJqclkyqEvz0_d9DXj0O5Q3BPCo/rs:fit/g:sm/q:40/h:266/w:579/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTM5MzU3/LTE0ODQyMDkzMjQt/MzcwNS5qcGVn.jpeg"
+    },
+    {
+      "name": "Republic Records",
+      "catno": "602465208375",
+      "entity_type": "1",
+      "entity_type_name": "Label",
+      "id": 38017,
+      "resource_url": "https://api.discogs.com/labels/38017",
+      "thumbnail_url": "https://i.discogs.com/77ikYc8B4OLqGB5DY14b4JlYbYMPeoZoIXbp9v5_NXo/rs:fit/g:sm/q:40/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTM4MDE3/LTE0OTg2NzM3MTct/Mjc5MC5wbmc.jpeg"
+    },
+    {
+      "name": "BBC",
+      "catno": "602465208375",
+      "entity_type": "1",
+      "entity_type_name": "Label",
+      "id": 101418,
+      "resource_url": "https://api.discogs.com/labels/101418",
+      "thumbnail_url": "https://i.discogs.com/qe8pqzMUGwwUT7zJmtCL_l65XG_Ah8R4BCvzTmuWpDU/rs:fit/g:sm/q:40/h:171/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTEwMTQx/OC0xMzIyNjA1NTM4/LmpwZWc.jpeg"
+    }
+  ],
+  "series": [],
+  "companies": [
+    {
+      "name": "UMG Recordings, Inc.",
+      "catno": "",
+      "entity_type": "4",
+      "entity_type_name": "Record Company",
+      "id": 272782,
+      "resource_url": "https://api.discogs.com/labels/272782",
+      "thumbnail_url": "https://i.discogs.com/ucLGnb9GBTIFDG8BbHMei8wrXV_5mzyzBm1hawbhHPA/rs:fit/g:sm/q:40/h:80/w:534/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTI3Mjc4/Mi0xNDU3MDEyNDAw/LTExMzYuanBlZw.jpeg"
+    },
+    {
+      "name": "Geffen Records",
+      "catno": "",
+      "entity_type": "5",
+      "entity_type_name": "Licensed To",
+      "id": 821,
+      "resource_url": "https://api.discogs.com/labels/821",
+      "thumbnail_url": "https://i.discogs.com/S6eRxyNw4Oy40nibC4jcIfBFrMosEjnLj7GS-4FyTj4/rs:fit/g:sm/q:40/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTgyMS0x/MzAwODc4NDM2Lmpw/ZWc.jpeg"
+    },
+    {
+      "name": "Mercury",
+      "catno": "",
+      "entity_type": "5",
+      "entity_type_name": "Licensed To",
+      "id": 39357,
+      "resource_url": "https://api.discogs.com/labels/39357",
+      "thumbnail_url": "https://i.discogs.com/5W4gCyESpg0nw-rEkJqclkyqEvz0_d9DXj0O5Q3BPCo/rs:fit/g:sm/q:40/h:266/w:579/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTM5MzU3/LTE0ODQyMDkzMjQt/MzcwNS5qcGVn.jpeg"
+    },
+    {
+      "name": "Republic Records",
+      "catno": "",
+      "entity_type": "5",
+      "entity_type_name": "Licensed To",
+      "id": 38017,
+      "resource_url": "https://api.discogs.com/labels/38017",
+      "thumbnail_url": "https://i.discogs.com/77ikYc8B4OLqGB5DY14b4JlYbYMPeoZoIXbp9v5_NXo/rs:fit/g:sm/q:40/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTM4MDE3/LTE0OTg2NzM3MTct/Mjc5MC5wbmc.jpeg"
+    },
+    {
+      "name": "UMG Commercial Services",
+      "catno": "",
+      "entity_type": "9",
+      "entity_type_name": "Distributed By",
+      "id": 1419182,
+      "resource_url": "https://api.discogs.com/labels/1419182",
+      "thumbnail_url": ""
+    },
+    {
+      "name": "BBC",
+      "catno": "",
+      "entity_type": "13",
+      "entity_type_name": "Phonographic Copyright (p)",
+      "id": 101418,
+      "resource_url": "https://api.discogs.com/labels/101418",
+      "thumbnail_url": "https://i.discogs.com/qe8pqzMUGwwUT7zJmtCL_l65XG_Ah8R4BCvzTmuWpDU/rs:fit/g:sm/q:40/h:171/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTEwMTQx/OC0xMzIyNjA1NTM4/LmpwZWc.jpeg"
+    },
+    {
+      "name": "Olivia Rodrigo",
+      "catno": "",
+      "entity_type": "14",
+      "entity_type_name": "Copyright (c)",
+      "id": 2056534,
+      "resource_url": "https://api.discogs.com/labels/2056534",
+      "thumbnail_url": "https://i.discogs.com/UScdCEaux7-M4bgcOefAjQV_sBNSG4-R-beliGtrTAk/rs:fit/g:sm/q:40/h:408/w:523/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTIwNTY1/MzQtMTYyNDg4Mjk0/My0zOTgyLnBuZw.jpeg"
+    },
+    {
+      "name": "MPO",
+      "catno": "",
+      "entity_type": "17",
+      "entity_type_name": "Pressed By",
+      "id": 56025,
+      "resource_url": "https://api.discogs.com/labels/56025",
+      "thumbnail_url": "https://i.discogs.com/B4O4f4Fu26_6Hf9DpAC4Q0s5dIDBSaPHgaWLwHO8pzs/rs:fit/g:sm/q:40/h:336/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTU2MDI1/LTEzMTQ2OTg5ODQu/anBlZw.jpeg"
+    },
+    {
+      "name": "BBC Radio 1's Live Lounge",
+      "catno": "",
+      "entity_type": "23",
+      "entity_type_name": "Recorded At",
+      "id": 447000,
+      "resource_url": "https://api.discogs.com/labels/447000",
+      "thumbnail_url": "https://i.discogs.com/mXNdbe9-hGEL1RHC6q6nIn4mj1nO__f0BGOnt24rs_w/rs:fit/g:sm/q:40/h:337/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTQ0NzAw/MC0xNDUxMzUwMzk5/LTE4MjguanBlZw.jpeg"
+    }
+  ],
+  "formats": [
+    {
+      "name": "Vinyl",
+      "qty": "1",
+      "text": "Mauve",
+      "descriptions": [
+        "7\"",
+        "33 \u2153 RPM",
+        "Record Store Day",
+        "Single"
+      ]
+    }
+  ],
+  "data_quality": "Needs Vote",
+  "community": {
+    "have": 13646,
+    "want": 3642,
+    "rating": {
+      "count": 192,
+      "average": 4.6
+    },
+    "submitter": {
+      "username": "RDY_RCRDS",
+      "resource_url": "https://api.discogs.com/users/RDY_RCRDS"
+    },
+    "contributors": [
+      {
+        "username": "RDY_RCRDS",
+        "resource_url": "https://api.discogs.com/users/RDY_RCRDS"
+      },
+      {
+        "username": "SP_Vinyl",
+        "resource_url": "https://api.discogs.com/users/SP_Vinyl"
+      },
+      {
+        "username": "Alexandra_Ropes",
+        "resource_url": "https://api.discogs.com/users/Alexandra_Ropes"
+      },
+      {
+        "username": "lennongazza333",
+        "resource_url": "https://api.discogs.com/users/lennongazza333"
+      },
+      {
+        "username": "feelthefever",
+        "resource_url": "https://api.discogs.com/users/feelthefever"
+      },
+      {
+        "username": "tom.l.mcdaniel",
+        "resource_url": "https://api.discogs.com/users/tom.l.mcdaniel"
+      },
+      {
+        "username": "myvinyldiscography",
+        "resource_url": "https://api.discogs.com/users/myvinyldiscography"
+      },
+      {
+        "username": "Mylene-Clouseau",
+        "resource_url": "https://api.discogs.com/users/Mylene-Clouseau"
+      },
+      {
+        "username": "Nadine_rlf",
+        "resource_url": "https://api.discogs.com/users/Nadine_rlf"
+      },
+      {
+        "username": "aboutTOdetonate",
+        "resource_url": "https://api.discogs.com/users/aboutTOdetonate"
+      },
+      {
+        "username": "hmvh",
+        "resource_url": "https://api.discogs.com/users/hmvh"
+      },
+      {
+        "username": "lcephoenix",
+        "resource_url": "https://api.discogs.com/users/lcephoenix"
+      }
+    ],
+    "data_quality": "Needs Vote",
+    "status": "Accepted"
+  },
+  "format_quantity": 1,
+  "date_added": "2024-04-13T19:58:06-07:00",
+  "date_changed": "2024-08-05T11:18:39-07:00",
+  "num_for_sale": 100,
+  "lowest_price": 659.05,
+  "master_id": 3562046,
+  "master_url": "https://api.discogs.com/masters/3562046",
+  "title": "Stick Season / Lacy",
+  "country": "Worldwide",
+  "released": "2024-04-20",
+  "notes": "Record Store Day First Release. Pressed to a quantity of 34000 copies.\n\n\"Made In France\" sticker on back.\n\nOlivia Rodrigo - Stick Season: First broadcast on 2nd October 2023.\nNoah Kahan - Lacy: First broadcast on 22nd November 2023.\n\nRunout on Side A: \"[MPO logo]\u00ae24 332818\" is mirrored.",
+  "released_formatted": "20 Apr 2024",
+  "identifiers": [
+    {
+      "type": "Barcode",
+      "value": "602465208375",
+      "description": "Scanned"
+    },
+    {
+      "type": "Barcode",
+      "value": "6 02465 20837 5",
+      "description": "Text"
+    },
+    {
+      "type": "Matrix / Runout",
+      "value": "[MPO logo]\u00ae24 332818 [MPO logo]\u00ae 24 332863 ZvC- LL 2023 A",
+      "description": "Side A runout"
+    },
+    {
+      "type": "Matrix / Runout",
+      "value": "[MPO logo]\u00ae24 335273 ZvC- LL 2023 B [MPO logo]\u00ae24 335266",
+      "description": "Side B runout"
+    }
+  ],
+  "genres": [
+    "Pop"
+  ],
+  "styles": [
+    "Alt-Pop",
+    "Folk"
+  ],
+  "tracklist": [
+    {
+      "position": "A",
+      "type_": "track",
+      "artists": [
+        {
+          "name": "Olivia Rodrigo",
+          "anv": "",
+          "join": "",
+          "role": "",
+          "tracks": "",
+          "id": 7592689,
+          "resource_url": "https://api.discogs.com/artists/7592689"
+        }
+      ],
+      "title": "Stick Season",
+      "extraartists": [
+        {
+          "name": "Craig Frank",
+          "anv": "",
+          "join": "",
+          "role": "Mixed By",
+          "tracks": "",
+          "id": 1638831,
+          "resource_url": "https://api.discogs.com/artists/1638831"
+        },
+        {
+          "name": "Paul David Hager",
+          "anv": "",
+          "join": "",
+          "role": "Mixed By",
+          "tracks": "",
+          "id": 384090,
+          "resource_url": "https://api.discogs.com/artists/384090"
+        }
+      ],
+      "duration": "3:02"
+    },
+    {
+      "position": "B",
+      "type_": "track",
+      "artists": [
+        {
+          "name": "Noah Kahan",
+          "anv": "",
+          "join": "",
+          "role": "",
+          "tracks": "",
+          "id": 5951449,
+          "resource_url": "https://api.discogs.com/artists/5951449"
+        }
+      ],
+      "title": "Lacy",
+      "extraartists": [
+        {
+          "name": "Ian Painter (2)",
+          "anv": "",
+          "join": "",
+          "role": "Engineer",
+          "tracks": "",
+          "id": 653980,
+          "resource_url": "https://api.discogs.com/artists/653980"
+        }
+      ],
+      "duration": "3:51"
+    }
+  ],
+  "extraartists": [
+    {
+      "name": "Andy Rogers",
+      "anv": "",
+      "join": "",
+      "role": "Producer",
+      "tracks": "",
+      "id": 280568,
+      "resource_url": "https://api.discogs.com/artists/280568"
+    }
+  ],
+  "images": [
+    {
+      "type": "primary",
+      "uri": "https://i.discogs.com/Xi-pgVGsb1JuQXqYIXe_tfzJ5ikpexW1V_f2QdFDFW4/rs:fit/g:sm/q:90/h:589/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzMtNDg2MC5qcGVn.jpeg",
+      "resource_url": "https://i.discogs.com/Xi-pgVGsb1JuQXqYIXe_tfzJ5ikpexW1V_f2QdFDFW4/rs:fit/g:sm/q:90/h:589/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzMtNDg2MC5qcGVn.jpeg",
+      "uri150": "https://i.discogs.com/eeEplsBlKbu9FGlXbMAhsNwvI8tTZCrp174yG5wauqc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzMtNDg2MC5qcGVn.jpeg",
+      "width": 600,
+      "height": 589
+    },
+    {
+      "type": "secondary",
+      "uri": "https://i.discogs.com/3RVomJ0Dxb-G46wnUwCiHIwJftJMnPYSX0Rq8_3SGeQ/rs:fit/g:sm/q:90/h:597/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzQtNjAzNi5qcGVn.jpeg",
+      "resource_url": "https://i.discogs.com/3RVomJ0Dxb-G46wnUwCiHIwJftJMnPYSX0Rq8_3SGeQ/rs:fit/g:sm/q:90/h:597/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzQtNjAzNi5qcGVn.jpeg",
+      "uri150": "https://i.discogs.com/2C0zw9UfNLnn2TP6nSOMziPlI2xCOVEEPKg72VgPa_s/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzQtNjAzNi5qcGVn.jpeg",
+      "width": 600,
+      "height": 597
+    },
+    {
+      "type": "secondary",
+      "uri": "https://i.discogs.com/xJvCSfTFA_fGqEw8AK-YfpTTFl21fx76OYtQfn_3QR8/rs:fit/g:sm/q:90/h:606/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/ODctNjE0OC5qcGVn.jpeg",
+      "resource_url": "https://i.discogs.com/xJvCSfTFA_fGqEw8AK-YfpTTFl21fx76OYtQfn_3QR8/rs:fit/g:sm/q:90/h:606/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/ODctNjE0OC5qcGVn.jpeg",
+      "uri150": "https://i.discogs.com/1TzoVTnxB960EAyqu2OR9RRxSLrxEb8_p6VwYfNVpAg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/ODctNjE0OC5qcGVn.jpeg",
+      "width": 600,
+      "height": 606
+    },
+    {
+      "type": "secondary",
+      "uri": "https://i.discogs.com/Utifj7myAiZKLnqL250BRd_oUPAuUgm6rIFQbqn3KMg/rs:fit/g:sm/q:90/h:608/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/ODctMjAwOC5qcGVn.jpeg",
+      "resource_url": "https://i.discogs.com/Utifj7myAiZKLnqL250BRd_oUPAuUgm6rIFQbqn3KMg/rs:fit/g:sm/q:90/h:608/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/ODctMjAwOC5qcGVn.jpeg",
+      "uri150": "https://i.discogs.com/3xud-h1AItDfDFqzXksDhHu6CWx8UwtpzVLLEQTmcCQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/ODctMjAwOC5qcGVn.jpeg",
+      "width": 600,
+      "height": 608
+    },
+    {
+      "type": "secondary",
+      "uri": "https://i.discogs.com/NIXZGlY9-cLKvHve5G1rsgfUbVJkBjg96oKGr2vpzbg/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzQtMjQ4MS5qcGVn.jpeg",
+      "resource_url": "https://i.discogs.com/NIXZGlY9-cLKvHve5G1rsgfUbVJkBjg96oKGr2vpzbg/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzQtMjQ4MS5qcGVn.jpeg",
+      "uri150": "https://i.discogs.com/LlOwvamKePmHqlcDDvxUy86aEOcg9vbM0WqDeA9Wil0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzQtMjQ4MS5qcGVn.jpeg",
+      "width": 600,
+      "height": 600
+    },
+    {
+      "type": "secondary",
+      "uri": "https://i.discogs.com/-ucFk1uyvbOcbdS9k_EUoSbCVNTaY2komfRM9FIHKPQ/rs:fit/g:sm/q:90/h:594/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzMtODkwOS5qcGVn.jpeg",
+      "resource_url": "https://i.discogs.com/-ucFk1uyvbOcbdS9k_EUoSbCVNTaY2komfRM9FIHKPQ/rs:fit/g:sm/q:90/h:594/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzMtODkwOS5qcGVn.jpeg",
+      "uri150": "https://i.discogs.com/W3x5Ch-aQl93vdBDAfncutU1aXu5qApoTlkBeY-MORs/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzMtODkwOS5qcGVn.jpeg",
+      "width": 600,
+      "height": 594
+    },
+    {
+      "type": "secondary",
+      "uri": "https://i.discogs.com/mM3a3jMJS5A2hmmLCJoGBQc6_eke_Idb0Q_v-cH1hGM/rs:fit/g:sm/q:90/h:588/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzMtOTQ5My5qcGVn.jpeg",
+      "resource_url": "https://i.discogs.com/mM3a3jMJS5A2hmmLCJoGBQc6_eke_Idb0Q_v-cH1hGM/rs:fit/g:sm/q:90/h:588/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzMtOTQ5My5qcGVn.jpeg",
+      "uri150": "https://i.discogs.com/MTpZd1giSvmebXEBf0nGs75DpeufraR5r0lVowU09Aw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzMtOTQ5My5qcGVn.jpeg",
+      "width": 600,
+      "height": 588
+    },
+    {
+      "type": "secondary",
+      "uri": "https://i.discogs.com/p_E7h9U5WYhKa1JsiuelbmAKQ2Bej0xOfLPQEkp3Rl8/rs:fit/g:sm/q:90/h:577/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM4MTg2/MDYtMzQzOC5qcGVn.jpeg",
+      "resource_url": "https://i.discogs.com/p_E7h9U5WYhKa1JsiuelbmAKQ2Bej0xOfLPQEkp3Rl8/rs:fit/g:sm/q:90/h:577/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM4MTg2/MDYtMzQzOC5qcGVn.jpeg",
+      "uri150": "https://i.discogs.com/e5BoaLy4EhgSaCgmJ6Cw79LKEMs0ABviWMn35xO5QXI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM4MTg2/MDYtMzQzOC5qcGVn.jpeg",
+      "width": 600,
+      "height": 577
+    }
+  ],
+  "thumb": "https://i.discogs.com/eeEplsBlKbu9FGlXbMAhsNwvI8tTZCrp174yG5wauqc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzMtNDg2MC5qcGVn.jpeg",
+  "estimated_weight": 60,
+  "blocked_from_sale": false
+}

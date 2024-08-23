@@ -1,11 +1,13 @@
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, TypedDict, Generator
 
+import frontmatter
 from sanitize_filename import sanitize
 
 from obsidian_tools.config import Config
 from obsidian_tools.errors import ObsidianToolsConfigError
-from obsidian_tools.integrations.tmdb import TMDBClient
+from obsidian_tools.integrations import TMDBClient
+from obsidian_tools.utils.humanize import and_join
 from obsidian_tools.utils.template import render_template
 
 
@@ -62,8 +64,85 @@ def build_tv_show_note(
     return content.strip()
 
 
+def build_tv_show_note_name(tv_series: Dict[str, Any]) -> str:
+    """
+    Build the name for a TV show note.
+    """
+    return f"{tv_series['name']}"
+
+
+def is_same_tv_show(tv_series: Dict[str, Any], post: frontmatter.Post) -> bool:
+    """
+    Check if the TV show data matches the note data.
+    """
+    return tv_series["id"] == post["tmdb_id"]
+
+
+def load_tv_show_note(file_path: Path) -> frontmatter.Post:
+    """
+    Load a TV show note.
+    """
+    with file_path.open("r") as file_obj:
+        post = frontmatter.loads(file_obj.read())
+    return post
+
+
+
+class AltNoteName(TypedDict):
+
+    name: str
+    path: Path
+    does_exist: bool
+    is_same: bool
+
+
+def list_alternative_note_names(
+    tv_series: Dict[str, Any],
+    config: Config,
+) -> List[AltNoteName]:
+    """
+    List alternative note names for a TV show.
+    """
+    possible_note_names = [
+        build_tv_show_note_name(tv_series),
+        f"{tv_series['name']} ({tv_series['first_air_date'][:4]})",
+        f"{tv_series['name']} ({and_join(tv_series['origin_country'])})",
+    ]
+
+    note_names = []
+    for note_name in possible_note_names:
+        note_path = build_tv_show_note_path(note_name, config)
+        try:
+            post = load_tv_show_note(note_path)
+        except FileNotFoundError:
+            post = None
+
+        note_names.append(
+            {
+                "name": note_name,
+                "path": note_path,
+                "does_exist": note_path.exists(),
+                "is_same": (
+                    is_same_tv_show(tv_series, post)
+                    if post is not None
+                    else False
+                ),
+            }
+        )
+
+    return note_names
+
+
+def build_tv_show_note_path(note_name: str, config: Config) -> Path:
+    """
+    Build the path for a TV show note.
+    """
+    file_name = sanitize(note_name) + ".md"
+    return config.TV_SHOWS_DIR_PATH / file_name
+
+
 def write_tv_show_note(
-    note_name: str,
+    file_path: Path,
     note_content: str,
     config: Config,
 ) -> Path:
@@ -77,10 +156,26 @@ def write_tv_show_note(
             "TV_SHOWS_DIR_PATH must be set in the configuration file."
         )
 
-    file_name = sanitize(note_name) + ".md"
-    file_path = config.TV_SHOWS_DIR_PATH / file_name
-
     with file_path.open("w") as file_obj:
         file_obj.write(note_content)
 
     return file_path
+
+
+def list_tv_show_paths(
+    config: Config,
+    has_tmdb_id: bool = False,
+) -> Generator[Tuple[Path, frontmatter.Post], None, None]:
+    """
+    List the paths of TV show notes.
+    """
+    for file_path in config.TV_SHOWS_DIR_PATH.glob("*.md"):
+        try:
+            post = load_tv_show_note(file_path)
+        except FileNotFoundError:
+            continue
+
+        if has_tmdb_id and "tmdb_id" not in post:
+            continue
+
+        yield file_path, post

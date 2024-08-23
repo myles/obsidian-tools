@@ -1,7 +1,7 @@
 import pytest
 import responses
 
-from obsidian_tools.config import Config
+from obsidian_tools.config import Config, ObsidianConfig
 from obsidian_tools.errors import ObsidianToolsConfigError
 from obsidian_tools.integrations.tmdb import TMDBClient
 from obsidian_tools.toolbox.library.service import tv_shows
@@ -10,13 +10,16 @@ from obsidian_tools.toolbox.library.service import tv_shows
 def test_ensure_required_tv_shows_config(vault_path):
     good_config = Config(
         VAULT_PATH=vault_path,
+        OBSIDIAN=ObsidianConfig(),
         TV_SHOWS_DIR_PATH=vault_path / "library" / "tv_shows",
         TMDB_API_KEY="i-am-a-tmdb-api-key",
     )
     assert tv_shows.ensure_required_tv_shows_config(good_config) is True
 
     bad_config = Config(
-        VAULT_PATH=vault_path, TMDB_API_KEY="i-am-a-tmdb-api-key"
+        VAULT_PATH=vault_path,
+        OBSIDIAN=ObsidianConfig(),
+        TMDB_API_KEY="i-am-a-tmdb-api-key",
     )
     with pytest.raises(ObsidianToolsConfigError) as exc_info:
         tv_shows.ensure_required_tv_shows_config(bad_config)
@@ -25,6 +28,7 @@ def test_ensure_required_tv_shows_config(vault_path):
 
     bad_config = Config(
         VAULT_PATH=vault_path,
+        OBSIDIAN=ObsidianConfig(),
         TV_SHOWS_DIR_PATH=vault_path / "library" / "tv_shows",
     )
     with pytest.raises(ObsidianToolsConfigError) as exc_info:

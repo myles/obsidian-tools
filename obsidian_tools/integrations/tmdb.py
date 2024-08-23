@@ -30,6 +30,20 @@ class TMDBClient(HttpClient):
 
         self.base_url = f"https://api.themoviedb.org/{api_version}"
 
+    # Movies
+    def get_movie_details(self, movie_id: int) -> RequestReturn:
+        """
+        Get the details of a movie.
+
+        - Docs: https://developer.themoviedb.org/reference/movie-details
+        """
+        url = f"{self.base_url}/movie/{movie_id}"
+
+        request, response = self.get(url)
+        response.raise_for_status()
+
+        return request, response
+
     # TV Series
     def get_tv_series_details(self, series_id: int) -> RequestReturn:
         """
