@@ -203,6 +203,9 @@ class Formatter:
     # Quarter
     def Q(self) -> str:
         """1 2 3 4"""
+        if isinstance(self.data, datetime.time):
+            raise ValueError("Quarter is not supported for time objects")
+
         return str((self.data.month - 1) // 3 + 1)
 
     def Qo(self) -> str:
@@ -270,6 +273,9 @@ class Formatter:
 
     # Day of Week (ISO)
     def E(self) -> str:
+        if isinstance(self.data, datetime.time):
+            raise ValueError("Quarter is not supported for time objects")
+
         return str(self.data.isocalendar().weekday)
 
     # Week of Year

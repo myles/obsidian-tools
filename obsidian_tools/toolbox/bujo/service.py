@@ -39,8 +39,18 @@ def get_monthly_log_file_path(
     """
     Get the path to the monthly log folder for the given date.
     """
-    file_name = format(date, config.MONTHLY_NOTE_FORMAT)
-    return config.MONTHLY_NOTE_FOLDER / f"{file_name}.md"
+    if config.MONTHLY_NOTE_FORMAT is None:
+        raise ValueError(
+            "MONTHLY_NOTE_FORMAT must be set in the configuration."
+        )
+
+    file_stem = format(date, config.MONTHLY_NOTE_FORMAT)
+    file_name = f"{file_stem}.md"
+
+    # If the monthly note folder is not set, return the file path in the vault.
+    if config.MONTHLY_NOTE_FOLDER is None:
+        return config.VAULT_PATH / file_name
+    return config.MONTHLY_NOTE_FOLDER / file_name
 
 
 def get_daily_log_file_path(
@@ -50,12 +60,16 @@ def get_daily_log_file_path(
     """
     Get the file name for the daily log for the given date.
     """
-    file_name = format(date, config.OBSIDIAN.daily_note_format)
-    return (
-        config.VAULT_PATH
-        / config.OBSIDIAN.daily_note_folder
-        / f"{file_name}.md"
-    )
+    if config.OBSIDIAN.daily_note_format is None:
+        raise ValueError("daily_note_format must be set in the configuration.")
+
+    file_stem = format(date, config.OBSIDIAN.daily_note_format)
+    file_name = f"{file_stem}.md"
+
+    # If the daily note folder is not set, return the file path in the vault.
+    if config.OBSIDIAN.daily_note_folder is None:
+        return config.VAULT_PATH / file_name
+    return config.VAULT_PATH / config.OBSIDIAN.daily_note_folder / file_name
 
 
 class MonthlyLogDayContext(TypedDict):
@@ -80,7 +94,7 @@ def get_monthly_log_context_for_day(
     Get the context for the monthly log template for the given date.
     """
     return {
-        "date": date if isinstance(date, datetime.date) else date.date(),
+        "date": date if isinstance(date, datetime.date) else date.date(),  # type: ignore
         "week_number": f"{date.isocalendar().year}-{date.isocalendar().week}",
         "daily_log_file_name": get_daily_log_file_path(date, config).stem,
     }
@@ -138,6 +152,11 @@ def get_monthly_log_path(
     if not config.MONTHLY_NOTE_FOLDER:
         raise ValueError(
             "MONTHLY_NOTE_FOLDER must be set in the configuration file."
+        )
+
+    if not config.MONTHLY_NOTE_FORMAT:
+        raise ValueError(
+            "MONTHLY_NOTE_FORMAT must be set in the configuration file."
         )
 
     note_name = format(date, config.MONTHLY_NOTE_FORMAT)
