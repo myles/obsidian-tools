@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
-import datetime
+
 from obsidian_tools.utils.humanize import and_join
+
 
 @dataclass
 class Person:
@@ -51,5 +52,3 @@ class Vinyl:
     @property
     def display_artists(self) -> str:
         return and_join([artist.name for artist in self.artists])
-
-

@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union, Optional
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from sanitize_filename import sanitize
 
@@ -76,7 +76,9 @@ def get_book_data_from_google_books(
     return data["items"][0]
 
 
-def get_openlibrary_work_description(works_data: List[Dict[str, Any]]) -> Optional[str]:
+def get_openlibrary_work_description(
+    works_data: List[Dict[str, Any]]
+) -> Optional[str]:
     """
     Get the description from an Open Library work.
 

@@ -35,22 +35,6 @@ def mock_config_for_bujo(mock_config):
 
 
 @pytest.fixture
-def mock_config_for_bujo(mock_config):
-    return replace(
-        mock_config,
-        MONTHLY_NOTE_FORMAT="YYYY-MM",
-        MONTHLY_NOTE_FOLDER=mock_config.VAULT_PATH / "bujo",
-    )
-
-
-@pytest.fixture
-def resp_tmdb_tv_episode_details():
-    path_obj = RESPONSES_DIR_PATH / "tmdb" / "tv-episode-details.json"
-    with path_obj.open() as file_obj:
-        return json.load(file_obj)
-
-
-@pytest.fixture
 def resp_discogs_release():
     path_obj = RESPONSES_DIR_PATH / "discogs" / "release.json"
     with path_obj.open() as file_obj:

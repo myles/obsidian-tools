@@ -3,7 +3,6 @@ from dataclasses import replace
 import pytest
 import responses
 
-from obsidia
 from obsidian_tools.errors import ObsidianToolsConfigError
 from obsidian_tools.integrations.openlibrary import OpenLibraryClient
 from obsidian_tools.toolbox.library.service import books

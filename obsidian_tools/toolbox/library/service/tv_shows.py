@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, TypedDict, Generator
+from typing import Any, Dict, Generator, List, Tuple, TypedDict
 
 import frontmatter
 from sanitize_filename import sanitize
@@ -85,7 +85,6 @@ def load_tv_show_note(file_path: Path) -> frontmatter.Post:
     with file_path.open("r") as file_obj:
         post = frontmatter.loads(file_obj.read())
     return post
-
 
 
 class AltNoteName(TypedDict):

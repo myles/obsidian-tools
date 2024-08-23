@@ -2,7 +2,6 @@ from dataclasses import replace
 
 import pytest
 
-
 from obsidian_tools.errors import ObsidianToolsConfigError
 from obsidian_tools.toolbox.library.service import core
 
