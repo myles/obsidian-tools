@@ -21,8 +21,9 @@ class ObsidianConfig:
         config = {}
 
         core_plugins_path = vault_path / ".obsidian" / "core-plugins.json"
-        with core_plugins_path.open("rb") as file_obj:
-            config["core_plugins_enabled"] = json.load(file_obj)
+        if core_plugins_path.exists():
+            with core_plugins_path.open("rb") as file_obj:
+                config["core_plugins_enabled"] = json.load(file_obj)
 
         daily_notes_path = vault_path / ".obsidian" / "daily-notes.json"
         if daily_notes_path.exists():
@@ -100,6 +101,9 @@ class Config:
 
         safe_keys = (
             "VAULT_PATH",
+            "OBSIDIAN",
+            "MONTHLY_NOTE_FOLDER",
+            "MONTHLY_NOTE_FORMAT",
             "TMDB_API_KEY",
             "LIBRARY_DIR_PATH",
             "BOOKS_DIR_PATH",
