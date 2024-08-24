@@ -128,7 +128,7 @@ def write_vinyl_note(
         )
 
     file_name = sanitize(note_name) + ".md"
-    file_path = config.BOOKS_DIR_PATH / file_name
+    file_path = config.VINYL_RECORDS_DIR_PATH / file_name
 
     with file_path.open("w") as file_obj:
         file_obj.write(note_content)
