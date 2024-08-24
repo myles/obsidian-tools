@@ -1,4 +1,3 @@
-
 from requests.auth import AuthBase
 
 from obsidian_tools.utils.http_client import HttpClient, RequestReturn
