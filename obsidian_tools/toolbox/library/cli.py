@@ -8,12 +8,19 @@ from obsidian_tools.config import Config
 from obsidian_tools.integrations import (
     DiscogsClient,
     GoogleBooksClient,
-    OpenLibraryClient,
-    TMDBClient,
     IGDBClient,
+    OpenLibraryClient,
     SteamClient,
+    TMDBClient,
 )
-from obsidian_tools.toolbox.library.service import books, core, movies, tv_shows, vinyl_records, video_games
+from obsidian_tools.toolbox.library.service import (
+    books,
+    core,
+    movies,
+    tv_shows,
+    video_games,
+    vinyl_records,
+)
 from obsidian_tools.utils.dataclasses import merge_dataclasses
 from obsidian_tools.utils.decorators import write_option
 
@@ -42,7 +49,10 @@ def cli(ctx) -> None:
             auth_token=config.DISCOGS_PERSONAL_ACCESS_TOKEN
         )
 
-    if config.IGDB_CLIENT_ID is not None and config.IGDB_CLIENT_SECRET is not None:
+    if (
+        config.IGDB_CLIENT_ID is not None
+        and config.IGDB_CLIENT_SECRET is not None
+    ):
         ctx.obj["igdb_client"] = IGDBClient(
             client_id=config.IGDB_CLIENT_ID,
             client_secret=config.IGDB_CLIENT_SECRET,
@@ -370,18 +380,22 @@ def add_video_game(
         igdb_id = questionary.select(
             "Which game?",
             choices=[
-                questionary.Choice(title=game['name'], value=game["id"])
+                questionary.Choice(title=game["name"], value=game["id"])
                 for game in search_results
             ],
         ).ask()
 
     if igdb_id is not None:
         video_game = video_games.igdb_data_to_dataclass(
-            *video_games.get_game_data_from_igdb(client=igdb_client, game_id=igdb_id)
+            *video_games.get_game_data_from_igdb(
+                client=igdb_client, game_id=igdb_id
+            )
         )
     elif steam_id is not None:
         video_game = video_games.steam_data_to_dataclass(
-            video_games.get_game_data_from_steam(client=steam_client, app_id=steam_id)
+            video_games.get_game_data_from_steam(
+                client=steam_client, app_id=steam_id
+            )
         )
     else:
         raise click.ClickException("IGDB ID or Steam ID must be provided.")

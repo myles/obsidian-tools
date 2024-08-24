@@ -1,6 +1,5 @@
+
 from obsidian_tools.utils.http_client import HttpClient, RequestReturn
-from requests.auth import AuthBase
-from requests import PreparedRequest
 
 
 class SteamClient(HttpClient):
@@ -17,4 +16,7 @@ class SteamClient(HttpClient):
         """
         Get a game by its app ID.
         """
-        return self.get(f"https://store.steampowered.com/api/appdetails", params={"appids": app_id})
+        return self.get(
+            "https://store.steampowered.com/api/appdetails",
+            params={"appids": app_id},
+        )

@@ -1,6 +1,7 @@
-from obsidian_tools.utils.http_client import HttpClient, RequestReturn
-from requests.auth import AuthBase
 from requests import Session
+from requests.auth import AuthBase
+
+from obsidian_tools.utils.http_client import HttpClient, RequestReturn
 
 
 class IGDBAuth(AuthBase):
@@ -29,7 +30,9 @@ class IGDBClient(HttpClient):
         self.session = Session()
 
         # Authenticate with the IGDB API.
-        _, auth_resp = self.authenticate(client_id=client_id, client_secret=client_secret)
+        _, auth_resp = self.authenticate(
+            client_id=client_id, client_secret=client_secret
+        )
         access_token = auth_resp.json()["access_token"]
 
         auth = IGDBAuth(client_id=client_id, access_token=access_token)
@@ -59,7 +62,7 @@ class IGDBClient(HttpClient):
         Search for games on IGDB.
         """
         url = f"{self.base_url}/games"
-        data = f"fields *; search \"{query}\";"
+        data = f'fields *; search "{query}";'
 
         request, response = self.post(url, data=data)
         response.raise_for_status()

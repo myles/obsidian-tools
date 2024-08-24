@@ -14,7 +14,10 @@ def ensure_required_vinyl_config(config: Config) -> bool:
     """
     Ensure that the required configuration values for vinyl are set.
     """
-    if config.VINYL_RECORDS_DIR_PATH is None or config.VINYL_RECORDS_DIR_PATH.exists() is False:
+    if (
+        config.VINYL_RECORDS_DIR_PATH is None
+        or config.VINYL_RECORDS_DIR_PATH.exists() is False
+    ):
         raise ObsidianToolsConfigError("VINYL_RECORDS_DIR_PATH")
 
     if not config.DISCOGS_PERSONAL_ACCESS_TOKEN:

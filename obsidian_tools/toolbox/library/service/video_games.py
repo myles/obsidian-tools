@@ -1,12 +1,13 @@
-from obsidian_tools.integrations import IGDBClient, SteamClient
-from obsidian_tools.config import Config
-from obsidian_tools.errors import ObsidianToolsConfigError
+from pathlib import Path
 from typing import Any, Dict, List, Tuple
-from obsidian_tools.toolbox.library.models import VideoGame
-from obsidian_tools.utils.template import render_template
 
 from sanitize_filename import sanitize
-from pathlib import Path
+
+from obsidian_tools.config import Config
+from obsidian_tools.errors import ObsidianToolsConfigError
+from obsidian_tools.integrations import IGDBClient, SteamClient
+from obsidian_tools.toolbox.library.models import VideoGame
+from obsidian_tools.utils.template import render_template
 
 
 def ensure_required_video_game_config(config: Config) -> bool:
@@ -77,7 +78,7 @@ def get_game_data_from_steam(
     if resp_json[app_id]["success"] is False:
         raise ValueError(f"Failed to get data for app ID {app_id}.")
 
-    return resp_json[app_id]['data']
+    return resp_json[app_id]["data"]
 
 
 def steam_data_to_dataclass(

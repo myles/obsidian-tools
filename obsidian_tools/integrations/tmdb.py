@@ -1,4 +1,3 @@
-from typing import Optional
 
 from requests.auth import AuthBase
 
@@ -19,9 +18,7 @@ class TMDBClient(HttpClient):
     A client for The Movie Database (TMDb) API.
     """
 
-    def __init__(
-        self, api_key: str, api_version: int = 3, **kwargs
-    ):
+    def __init__(self, api_key: str, api_version: int = 3, **kwargs):
         auth = TMDBAuth(api_key=api_key)
         super().__init__(auth=auth, **kwargs)
 
