@@ -20,13 +20,10 @@ class TMDBClient(HttpClient):
     """
 
     def __init__(
-        self, api_key: str, api_version: Optional[int] = None, **kwargs
+        self, api_key: str, api_version: int = 3, **kwargs
     ):
         auth = TMDBAuth(api_key=api_key)
         super().__init__(auth=auth, **kwargs)
-
-        if api_version is None:
-            api_version = 3
 
         self.base_url = f"https://api.themoviedb.org/{api_version}"
 

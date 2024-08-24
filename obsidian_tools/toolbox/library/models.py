@@ -52,3 +52,15 @@ class Vinyl:
     @property
     def display_artists(self) -> str:
         return and_join([artist.name for artist in self.artists])
+
+
+@dataclass
+class VideoGame:
+
+    title: str
+    description: Optional[str] = None
+    cover_url: Optional[str] = None
+
+    # Source-specific identifiers.
+    igdb_id: Optional[str] = None
+    steam_id: Optional[str] = None

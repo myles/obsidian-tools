@@ -52,12 +52,20 @@ class Config:
 
     # Media tools configuration
     DISCOGS_PERSONAL_ACCESS_TOKEN: Optional[str] = None
+
+    IGDB_CLIENT_ID: Optional[str] = None
+    IGDB_CLIENT_SECRET: Optional[str] = None
+
     TMDB_API_KEY: Optional[str] = None
+
+    STEAM_WEB_API_KEY: Optional[str] = None
 
     LIBRARY_DIR_PATH: Optional[Path] = None
     BOOKS_DIR_PATH: Optional[Path] = None
     TV_SHOWS_DIR_PATH: Optional[Path] = None
     MOVIES_DIR_PATH: Optional[Path] = None
+    VIDEO_GAMES_DIR_PATH: Optional[Path] = None
+    VINYL_RECORDS_DIR_PATH: Optional[Path] = None
 
     @classmethod
     def from_file(cls, config_file_path: Path):
@@ -104,6 +112,16 @@ class Config:
         if "MOVIES_DIR_PATH" in config:
             config["MOVIES_DIR_PATH"] = (
                 config["LIBRARY_DIR_PATH"] / config["MOVIES_DIR_PATH"]
+            )
+
+        if "VIDEO_GAMES_DIR_PATH" in config:
+            config["VIDEO_GAMES_DIR_PATH"] = (
+                config["LIBRARY_DIR_PATH"] / config["VIDEO_GAMES_DIR_PATH"]
+            )
+
+        if "VINYL_RECORDS_DIR_PATH" in config:
+            config["VINYL_RECORDS_DIR_PATH"] = (
+                config["LIBRARY_DIR_PATH"] / config["VINYL_RECORDS_DIR_PATH"]
             )
 
         safe_keys = list(cls.__annotations__.keys())

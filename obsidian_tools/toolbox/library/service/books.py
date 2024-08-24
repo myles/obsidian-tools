@@ -99,7 +99,7 @@ def get_openlibrary_work_description(
     return None
 
 
-def openlibrary_book_data_to_dataclass(
+def openlibrary_data_to_dataclass(
     book_data: Dict[str, Any],
     works_data: List[Dict[str, Any]],
     authors_data: List[Dict[str, Any]],

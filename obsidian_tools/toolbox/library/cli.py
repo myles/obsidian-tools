@@ -10,8 +10,10 @@ from obsidian_tools.integrations import (
     GoogleBooksClient,
     OpenLibraryClient,
     TMDBClient,
+    IGDBClient,
+    SteamClient,
 )
-from obsidian_tools.toolbox.library.service import books, core, movies, tv_shows, vinyl
+from obsidian_tools.toolbox.library.service import books, core, movies, tv_shows, vinyl_records, video_games
 from obsidian_tools.utils.dataclasses import merge_dataclasses
 from obsidian_tools.utils.decorators import write_option
 
@@ -40,6 +42,15 @@ def cli(ctx) -> None:
             auth_token=config.DISCOGS_PERSONAL_ACCESS_TOKEN
         )
 
+    if config.IGDB_CLIENT_ID is not None and config.IGDB_CLIENT_SECRET is not None:
+        ctx.obj["igdb_client"] = IGDBClient(
+            client_id=config.IGDB_CLIENT_ID,
+            client_secret=config.IGDB_CLIENT_SECRET,
+        )
+
+    if config.STEAM_WEB_API_KEY is not None:
+        ctx.obj["steam_client"] = SteamClient(api_key=config.STEAM_WEB_API_KEY)
+
     return None
 
 
@@ -61,7 +72,7 @@ def add_book(ctx: click.Context, isbn: str, write: bool) -> None:
     if books_dir_path is None:
         raise Exception("BOOKS_DIR_PATH must be set in the configuration file.")
 
-    open_library_book = books.openlibrary_book_data_to_dataclass(
+    open_library_book = books.openlibrary_data_to_dataclass(
         *books.get_book_data_from_openlibrary(
             isbn=isbn, client=open_library_client
         )
@@ -88,29 +99,6 @@ def add_book(ctx: click.Context, isbn: str, write: bool) -> None:
         return click.echo(f"Book written to {note_file_path}")
 
     return click.echo(note_content)
-
-
-@cli.command()
-@click.pass_context
-@write_option
-def read_book(ctx: click.Context, write: bool) -> None:
-    """
-    Track reading a book in the Obsidian vault.
-    """
-    config: Config = ctx.obj["config"]
-    books.ensure_required_books_config(config)
-
-    book_note_paths = books.get_book_note_paths(config)
-    selected_book_path = questionary.select(
-        "Select a book",
-        choices=[
-            questionary.Choice(title=path.stem, value=path)
-            for path in book_note_paths
-        ],
-    ).ask()
-
-    breakpoint()
-    return None
 
 
 @cli.command()
@@ -303,7 +291,7 @@ def add_vinyl(
 
     # If we have a search query or an ISBN, search for the vinyl release.
     if search_query is not None or isbn is not None:
-        search_results = vinyl.search_vinyl_on_discogs(
+        search_results = vinyl_records.search_vinyl_on_discogs(
             client=client,
             query=search_query,
             barcode=isbn,
@@ -321,8 +309,8 @@ def add_vinyl(
     if discogs_release_id is None:
         raise click.ClickException("Discogs release ID must be provided.")
 
-    vinyl_record = vinyl.discogs_release_data_to_dataclass(
-        vinyl.get_vinyl_data_from_discogs_release(
+    vinyl_record = vinyl_records.discogs_release_data_to_dataclass(
+        vinyl_records.get_vinyl_data_from_discogs_release(
             discogs_release_id=discogs_release_id,
             client=client,
         )
@@ -332,14 +320,83 @@ def add_vinyl(
     if vinyl_record.artists:
         note_name += f" - {vinyl_record.display_artists}"
 
-    note_content = vinyl.build_vinyl_note(vinyl_record=vinyl_record)
+    note_content = vinyl_records.build_vinyl_note(vinyl_record=vinyl_record)
 
     if write is True:
-        note_file_path = vinyl.write_vinyl_note(
+        note_file_path = vinyl_records.write_vinyl_note(
             note_name=note_name,
             note_content=note_content,
             config=config,
         )
         return click.echo(f"Vinyl record written to {note_file_path}")
+
+    return click.echo(note_content)
+
+
+@cli.command()
+@click.pass_context
+@click.argument("search_query", type=str, required=False)
+@click.option("--igdb-id", type=int)
+@click.option("--steam-id", type=str)
+@write_option
+def add_video_game(
+    ctx: click.Context,
+    search_query: Union[str, None],
+    igdb_id: Union[int, None],
+    steam_id: Union[str, None],
+    write: bool,
+) -> None:
+    """
+    Add a video game to the Obsidian vault.
+    """
+    config: Config = ctx.obj["config"]
+    igdb_client: IGDBClient = ctx.obj["igdb_client"]
+    steam_client: SteamClient = ctx.obj["steam_client"]
+
+    video_games.ensure_required_video_game_config(config)
+
+    # If not search query, IGDB ID, or Steam ID is provided, prompt the user
+    # for a search query.
+    if search_query is None and igdb_id is None and steam_id is None:
+        search_query = click.prompt("Enter a search query")
+
+    # If we have a search query, search for the video game.
+    if search_query is not None:
+        search_results = video_games.search_video_game_on_igdb(
+            client=igdb_client,
+            query=search_query,
+        )
+
+        igdb_id = questionary.select(
+            "Which game?",
+            choices=[
+                questionary.Choice(title=game['name'], value=game["id"])
+                for game in search_results
+            ],
+        ).ask()
+
+    if igdb_id is not None:
+        video_game = video_games.igdb_data_to_dataclass(
+            *video_games.get_game_data_from_igdb(client=igdb_client, game_id=igdb_id)
+        )
+    elif steam_id is not None:
+        video_game = video_games.steam_data_to_dataclass(
+            video_games.get_game_data_from_steam(client=steam_client, app_id=steam_id)
+        )
+    else:
+        raise click.ClickException("IGDB ID or Steam ID must be provided.")
+
+    note_name = video_game.title
+    note_content = video_games.build_video_game_note(
+        video_game=video_game,
+    )
+
+    if write is True:
+        note_file_path = video_games.write_video_game(
+            note_name=note_name,
+            note_content=note_content,
+            config=config,
+        )
+        return click.echo(f"Video game written to {note_file_path}")
 
     return click.echo(note_content)

@@ -14,8 +14,8 @@ def ensure_required_vinyl_config(config: Config) -> bool:
     """
     Ensure that the required configuration values for vinyl are set.
     """
-    if config.VINYL_DIR_PATH is None or config.VINYL_DIR_PATH.exists() is False:
-        raise ObsidianToolsConfigError("VINYL_DIR_PATH")
+    if config.VINYL_RECORDS_DIR_PATH is None or config.VINYL_RECORDS_DIR_PATH.exists() is False:
+        raise ObsidianToolsConfigError("VINYL_RECORDS_DIR_PATH")
 
     if not config.DISCOGS_PERSONAL_ACCESS_TOKEN:
         raise ObsidianToolsConfigError("DISCOGS_PERSONAL_ACCESS_TOKEN")
@@ -119,9 +119,9 @@ def write_vinyl_note(
     """
     # This is just a sanity check. The ensure_required_books_config function
     # should catch this.
-    if not config.VINYL_DIR_PATH:
+    if not config.VINYL_RECORDS_DIR_PATH:
         raise ValueError(
-            "VINYL_DIR_PATH must be set in the configuration file."
+            "VINYL_RECORDS_DIR_PATH must be set in the configuration file."
         )
 
     file_name = sanitize(note_name) + ".md"
