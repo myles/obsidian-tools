@@ -5,7 +5,7 @@ import click
 from obsidian_tools.config import Config
 from obsidian_tools.toolbox.bujo import service
 from obsidian_tools.utils.clock import get_start_of_week
-from obsidian_tools.utils.decorators import write_force_option, write_option, WeekFormat
+from obsidian_tools.utils.click_utils import write_force_option, write_option, WeekFormat
 
 
 @click.group()
