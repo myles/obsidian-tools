@@ -142,7 +142,10 @@ def build_monthly_log_note(date: datetime.date, config: Config) -> str:
     """
     month = month_to_dataclass(date, config)
 
-    content = render_template("bujo/monthly_log.md", month=month, )
+    content = render_template(
+        "bujo/monthly_log.md",
+        month=month,
+    )
     return content.strip()
 
 

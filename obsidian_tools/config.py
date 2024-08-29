@@ -90,7 +90,7 @@ class Config:
         for key in transform_to_path_root_keys:
             if key in config:
                 config[key] = config["VAULT_PATH"] / config[key]
-        
+
         transform_to_path_library_keys = (
             "BOOKS_DIR_PATH",
             "TV_SHOWS_DIR_PATH",

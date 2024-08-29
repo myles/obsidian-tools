@@ -1,6 +1,6 @@
 import datetime
-from pathlib import Path
 from dataclasses import dataclass
+from pathlib import Path
 
 
 @dataclass
@@ -20,11 +20,11 @@ class Day:
     @property
     def next_day(self) -> datetime.date:
         return self.date + datetime.timedelta(days=1)
-    
+
     @property
     def is_weekend(self) -> bool:
         return self.date.weekday() in (5, 6)
-    
+
     @property
     def is_weekday(self) -> bool:
         return not self.is_weekend
@@ -63,17 +63,17 @@ class Month:
     weeks: list[Week]
 
     @property
-    def start_of_month(self):
-        return self.weeks[0].start_of_week
+    def start(self):
+        return self.weeks[0].start
 
     @property
-    def end_of_month(self):
-        return self.weeks[-1].end_of_week
+    def end(self):
+        return self.weeks[-1].end
 
     @property
-    def previous_month(self):
-        return (self.start_of_month - datetime.timedelta(days=1)).replace(day=1)
+    def prev_month_start(self):
+        return (self.start - datetime.timedelta(days=1)).replace(day=1)
 
     @property
-    def next_month(self):
-        return self.end_of_month + datetime.timedelta(days=1)
+    def next_month_start(self):
+        return self.end + datetime.timedelta(days=1)

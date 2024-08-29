@@ -4,8 +4,12 @@ import click
 
 from obsidian_tools.config import Config
 from obsidian_tools.toolbox.bujo import service
+from obsidian_tools.utils.click_utils import (
+    WeekFormat,
+    write_force_option,
+    write_option,
+)
 from obsidian_tools.utils.clock import get_start_of_week
-from obsidian_tools.utils.click_utils import write_force_option, write_option, WeekFormat
 
 
 @click.group()
@@ -75,10 +79,14 @@ def add_weekly(
 
     start_of_week = get_start_of_week(week)
 
-    note_content = service.build_weekly_log_note(date=start_of_week, config=config)
+    note_content = service.build_weekly_log_note(
+        date=start_of_week, config=config
+    )
 
     if write is True:
-        note_file_path = service.get_weekly_log_file_path(date=start_of_week, config=config)
+        note_file_path = service.get_weekly_log_file_path(
+            date=start_of_week, config=config
+        )
 
         if note_file_path.exists() and force is False:
             click.echo(

@@ -43,14 +43,18 @@ def get_end_of_month(
     return date.replace(day=last_day_of_month)
 
 
-def get_start_of_week(date: Union[datetime.date, datetime.datetime]) -> datetime.date:
+def get_start_of_week(
+    date: Union[datetime.date, datetime.datetime]
+) -> datetime.date:
     """
     Get the start of the week for the given date.
     """
     return date - datetime.timedelta(days=date.weekday())
 
 
-def get_end_of_week(date: Union[datetime.date, datetime.datetime]) -> datetime.date:
+def get_end_of_week(
+    date: Union[datetime.date, datetime.datetime]
+) -> datetime.date:
     """
     Get the end of the week for the given date.
     """
