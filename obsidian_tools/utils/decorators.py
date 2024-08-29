@@ -1,4 +1,28 @@
 import click
+from typing import Optional
+from datetime import datetime
+
+
+class WeekFormat(click.DateTime):
+
+    name = "week"
+
+    def __init__(self, **kwargs):
+        kwargs["formats"] = ["%Y-%W", "%Y-%U"]
+        super().__init__(**kwargs)
+    
+    def _try_to_convert_date(self, value: str, format: str) -> Optional[datetime]:
+        value = f"{value}-0"
+        format = f"{format}-%w"
+
+        try:
+            return datetime.strptime(value, format)
+        except ValueError:
+            return None
+
+    def __repr__(self) -> str:
+        return "Week"
+
 
 
 def write_option(func):

@@ -1,6 +1,8 @@
 ---
 title: "{{ start_of_month|format_date("MMMM YYYY") }}"
 type: Monthly Log
+aliases:
+  - "{{ start_of_month|format_date("MMMM YYYY") }}"
 ---
 
 [[{{ start_of_previous_month|format_date("YYYY-MM") }}|{{ start_of_previous_month|format_date("MMMM YYYY") }}]] - **{{ start_of_previous_month|format_date("MMMM YYYY") }}** - [[{{ start_of_next_month|format_date("YYYY-MM") }}|{{ start_of_next_month|format_date("MMMM YYYY") }}]]
