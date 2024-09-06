@@ -3,7 +3,7 @@ import datetime
 import click
 
 from obsidian_tools.config import Config
-from obsidian_tools.toolbox.bujo import service
+from obsidian_tools.toolbox.bujo.service import create, base
 from obsidian_tools.utils.click_utils import (
     WeekFormat,
     write_force_option,
@@ -20,7 +20,7 @@ def cli(ctx) -> None:
     """
     config: Config = ctx.obj["config"]
 
-    service.ensure_required_config(config)
+    base.ensure_required_config(config)
 
     ctx.ensure_object(dict)
 
@@ -43,10 +43,10 @@ def add_monthly(
     """
     config: Config = ctx.obj["config"]
 
-    note_content = service.build_monthly_log_note(date=month, config=config)
+    note_content = create.build_monthly_log_note(date=month, config=config)
 
     if write is True:
-        note_file_path = service.get_monthly_log_file_path(
+        note_file_path = base.get_monthly_log_file_path(
             date=month, config=config
         )
 
@@ -56,7 +56,7 @@ def add_monthly(
             )
             return None
 
-        service.write_log_note(note_file_path, note_content)
+        create.write_log_note(note_file_path, note_content)
         click.echo(f"Monthly Log Note written to: {note_file_path}")
         return None
 
@@ -81,12 +81,12 @@ def add_weekly(
 
     start_of_week = get_start_of_week(week)
 
-    note_content = service.build_weekly_log_note(
+    note_content = create.build_weekly_log_note(
         date=start_of_week, config=config
     )
 
     if write is True:
-        note_file_path = service.get_weekly_log_file_path(
+        note_file_path = base.get_weekly_log_file_path(
             date=start_of_week, config=config
         )
 
@@ -96,7 +96,7 @@ def add_weekly(
             )
             return None
 
-        service.write_log_note(note_file_path, note_content)
+        create.write_log_note(note_file_path, note_content)
         click.echo(f"Weekly Log Note written to: {note_file_path}")
         return None
 
