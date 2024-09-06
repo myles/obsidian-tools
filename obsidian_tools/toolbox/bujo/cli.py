@@ -46,7 +46,9 @@ def add_monthly(
     note_content = service.build_monthly_log_note(date=month, config=config)
 
     if write is True:
-        note_file_path = service.get_monthly_log_path(date=month, config=config)
+        note_file_path = service.get_monthly_log_file_path(
+            date=month, config=config
+        )
 
         if note_file_path.exists() and force is False:
             click.echo(
