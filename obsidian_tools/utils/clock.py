@@ -4,7 +4,7 @@ from typing import List, Union
 
 
 def get_range_between_dates(
-    start_date: datetime.date, end_date: datetime.date
+    start_date: datetime.date, end_date: datetime.date, step: int = 1
 ) -> List[datetime.date]:
     """
     Get a list of dates between the start and end date.
@@ -17,7 +17,7 @@ def get_range_between_dates(
 
     while current_date <= end_date:
         dates.append(current_date)
-        current_date += datetime.timedelta(days=1)
+        current_date += datetime.timedelta(days=step)
 
     return dates
 
@@ -41,3 +41,21 @@ def get_end_of_month(
         date.year, date.month
     )
     return date.replace(day=last_day_of_month)
+
+
+def get_start_of_week(
+    date: Union[datetime.date, datetime.datetime]
+) -> datetime.date:
+    """
+    Get the start of the week for the given date.
+    """
+    return date - datetime.timedelta(days=date.weekday())
+
+
+def get_end_of_week(
+    date: Union[datetime.date, datetime.datetime]
+) -> datetime.date:
+    """
+    Get the end of the week for the given date.
+    """
+    return date + datetime.timedelta(days=6 - date.weekday())

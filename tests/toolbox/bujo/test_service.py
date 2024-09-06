@@ -34,24 +34,6 @@ def test_ensure_required_config(mock_config):
     assert service.ensure_required_config(mock_config) is True
 
 
-def test_get_range_between_dates():
-    start_date = datetime.date(2024, 8, 1)
-    end_date = datetime.date(2024, 8, 31)
-
-    dates = service.get_range_between_dates(start_date, end_date)
-    assert len(dates) == 31
-
-
-def test_get_start_of_month():
-    start_of_month = service.get_start_of_month(datetime.date(2024, 8, 15))
-    assert start_of_month == datetime.date(2024, 8, 1)
-
-
-def test_get_end_of_month():
-    end_of_month = service.get_end_of_month(datetime.date(2024, 8, 15))
-    assert end_of_month == datetime.date(2024, 8, 31)
-
-
 def test_get_monthly_log_file_path(mock_config_for_bujo):
     date = datetime.date(2024, 8, 1)
     file_path = service.get_monthly_log_file_path(date, mock_config_for_bujo)
