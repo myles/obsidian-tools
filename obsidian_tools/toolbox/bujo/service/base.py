@@ -6,10 +6,7 @@ from obsidian_tools.errors import (
     ObsidianToolsConfigError,
     ObsidianToolsPluginNotFoundError,
 )
-from obsidian_tools.toolbox.bujo.models import Day, Month, Week
-from obsidian_tools.utils import clock
 from obsidian_tools.utils.momentjs import format
-from obsidian_tools.utils.template import render_template
 
 
 def ensure_required_config(config: Config) -> bool:

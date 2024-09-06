@@ -1,19 +1,16 @@
 """
 Module for creating Bullet Journal logs.
 """
+
 import datetime
 from pathlib import Path
 
 from obsidian_tools.config import Config
-from obsidian_tools.errors import (
-    ObsidianToolsConfigError,
-    ObsidianToolsPluginNotFoundError,
-)
 from obsidian_tools.toolbox.bujo.models import Day, Month, Week
-from obsidian_tools.utils import clock
-from obsidian_tools.utils.momentjs import format
-from obsidian_tools.utils.template import render_template
 from obsidian_tools.toolbox.bujo.service import base
+from obsidian_tools.utils import clock
+from obsidian_tools.utils.template import render_template
+
 
 def day_to_dataclass(date: datetime.date, config: Config) -> Day:
     """
@@ -43,7 +40,9 @@ def week_to_dataclass(week_date: datetime.date, config: Config) -> Week:
 
     return Week(
         week_number=week_number,
-        weekly_log_file_path=base.get_weekly_log_file_path(start_of_week, config),
+        weekly_log_file_path=base.get_weekly_log_file_path(
+            start_of_week, config
+        ),
         days=days,
     )
 
@@ -62,7 +61,9 @@ def month_to_dataclass(month_date: datetime.date, config: Config) -> Month:
     ]
 
     return Month(
-        monthly_log_file_path=base.get_monthly_log_file_path(month_date, config),
+        monthly_log_file_path=base.get_monthly_log_file_path(
+            month_date, config
+        ),
         weeks=weeks,
     )
 

@@ -3,7 +3,7 @@ import datetime
 import click
 
 from obsidian_tools.config import Config
-from obsidian_tools.toolbox.bujo.service import create, base
+from obsidian_tools.toolbox.bujo.service import base, create
 from obsidian_tools.utils.click_utils import (
     WeekFormat,
     write_force_option,
