@@ -57,3 +57,6 @@ class HttpClient:
 
     def get(self, url: str, **kwargs) -> RequestReturn:
         return self.request(HttpMethod.GET, url, **kwargs)
+
+    def post(self, url: str, **kwargs) -> RequestReturn:
+        return self.request(HttpMethod.POST, url, **kwargs)
