@@ -1,5 +1,3 @@
-from typing import Optional
-
 from requests.auth import AuthBase
 
 from obsidian_tools.utils.http_client import HttpClient, RequestReturn
@@ -19,16 +17,25 @@ class TMDBClient(HttpClient):
     A client for The Movie Database (TMDb) API.
     """
 
-    def __init__(
-        self, api_key: str, api_version: Optional[int] = None, **kwargs
-    ):
+    def __init__(self, api_key: str, api_version: int = 3, **kwargs):
         auth = TMDBAuth(api_key=api_key)
         super().__init__(auth=auth, **kwargs)
 
-        if api_version is None:
-            api_version = 3
-
         self.base_url = f"https://api.themoviedb.org/{api_version}"
+
+    # Movies
+    def get_movie_details(self, movie_id: int) -> RequestReturn:
+        """
+        Get the details of a movie.
+
+        - Docs: https://developer.themoviedb.org/reference/movie-details
+        """
+        url = f"{self.base_url}/movie/{movie_id}"
+
+        request, response = self.get(url)
+        response.raise_for_status()
+
+        return request, response
 
     # TV Series
     def get_tv_series_details(self, series_id: int) -> RequestReturn:

@@ -23,7 +23,7 @@ def test_ensure_required_books_config(mock_config):
 
 
 @responses.activate
-def test_get_book_data(
+def test_get_book_data_from_openlibrary(
     resp_openlibrary_author,
     resp_openlibrary_author_two,
     resp_openlibrary_edition,
@@ -69,7 +69,9 @@ def test_get_book_data(
         )
     )
 
-    book, works, authors = books.get_book_data(isbn=isbn, client=client)
+    book, works, authors = books.get_book_data_from_openlibrary(
+        isbn=isbn, client=client
+    )
 
     assert book == resp_openlibrary_edition
     assert works == [resp_openlibrary_work]

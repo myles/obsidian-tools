@@ -14,6 +14,7 @@ def test_ensure_required_config(mock_config):
     assert core.ensure_required_config(good_config) is True
 
     bad_config = replace(mock_config, LIBRARY_DIR_PATH=None)
+
     with pytest.raises(ObsidianToolsConfigError) as exc_info:
         core.ensure_required_config(bad_config)
 

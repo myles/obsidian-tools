@@ -15,7 +15,7 @@ class GoogleBooksClient(HttpClient):
         Get a book from the Google Books API using its ISBN.
         """
         request, response = self.get(
-            f"{self.base_url}/volumes", params={"q": f"isbn%3A{isbn}"}
+            f"{self.base_url}/volumes", params={"q": f"isbn:{isbn}"}
         )
         response.raise_for_status()
         return request, response
