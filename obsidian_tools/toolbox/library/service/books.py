@@ -1,7 +1,8 @@
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, Generator, List, Optional, Tuple, Union
 
+import frontmatter
 from sanitize_filename import sanitize
 
 from obsidian_tools.config import Config
@@ -212,3 +213,34 @@ def write_book_note(
         file_obj.write(note_content)
 
     return file_path
+
+
+def load_book_note(file_path: Path) -> frontmatter.Post:
+    """
+    Load a book note.
+    """
+    with file_path.open("r") as file_obj:
+        post = frontmatter.loads(file_obj.read())
+    return post
+
+
+def list_books_path(
+    config: Config,
+) -> Generator[Tuple[Path, frontmatter.Post], None, None]:
+    """
+    List the paths of book notes.
+    """
+    # This is just a sanity check. The ensure_required_books_config function
+    # should catch this.
+    if not config.BOOKS_DIR_PATH:
+        raise ValueError(
+            "BOOKS_DIR_PATH must be set in the configuration file."
+        )
+
+    for file_path in config.BOOKS_DIR_PATH.glob("*.md"):
+        try:
+            post = load_book_note(file_path)
+        except FileNotFoundError:
+            continue
+
+        yield file_path, post

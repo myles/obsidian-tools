@@ -155,11 +155,17 @@ def list_alternative_note_names(
     """
     List alternative note names for a TV show.
     """
-    possible_note_names = [
-        build_tv_show_note_name(tv_show),
-        f"{tv_show.name} ({tv_show.first_air_date.year})",
-        f"{tv_show.name} ({and_join(tv_show.origin_countries)})",
-    ]
+    possible_note_names = [build_tv_show_note_name(tv_show)]
+
+    if tv_show.first_air_date is not None:
+        possible_note_names.append(
+            f"{tv_show.name} ({tv_show.first_air_date.year})",
+        )
+
+    if tv_show.origin_countries:
+        possible_note_names.append(
+            f"{tv_show.name} ({and_join(tv_show.origin_countries)})",
+        )
 
     note_names = []
     for note_name in possible_note_names:
