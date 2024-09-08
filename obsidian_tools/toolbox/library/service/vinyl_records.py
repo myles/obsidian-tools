@@ -6,7 +6,7 @@ from sanitize_filename import sanitize
 from obsidian_tools.config import Config
 from obsidian_tools.errors import ObsidianToolsConfigError
 from obsidian_tools.integrations import DiscogsClient
-from obsidian_tools.toolbox.library.models import Person, Track, Vinyl
+from obsidian_tools.toolbox.library.models import Person, VinylRecord, VinylRecordTrack
 from obsidian_tools.utils.template import render_template
 
 
@@ -54,7 +54,9 @@ def get_vinyl_data_from_discogs_release(
     return response.json()
 
 
-def discogs_release_data_to_dataclass(release_data: Dict[str, Any]) -> Vinyl:
+def discogs_release_data_to_dataclass(
+    release_data: Dict[str, Any]
+) -> VinylRecord:
     """
     Convert Discogs release data to a Vinyl dataclass.
     """
@@ -84,27 +86,26 @@ def discogs_release_data_to_dataclass(release_data: Dict[str, Any]) -> Vinyl:
         ...
 
     # Get the track list.
-    tracklist = []
-    for track in release_data["tracklist"]:
-        tracklist.append(
-            Track(
-                title=track["title"],
-                position=track["position"],
-                duration=track["duration"],
-            )
+    tracks = [
+        VinylRecordTrack(
+            title=track["title"],
+            position=track["position"],
+            duration=track["duration"],
         )
+        for track in release_data["tracklist"]
+    ]
 
-    return Vinyl(
+    return VinylRecord(
         title=release_data["title"],
         artists=artists,
         isbn=isbn,
         image_url=image_url,
-        tracklist=tracklist,
+        tracks=tracks,
         discogs_id=release_data["id"],
     )
 
 
-def build_vinyl_note(vinyl_record: Vinyl) -> str:
+def build_vinyl_note(vinyl_record: VinylRecord) -> str:
     """
     Build the note for a vinyl record.
     """

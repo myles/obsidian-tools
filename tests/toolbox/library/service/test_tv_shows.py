@@ -32,7 +32,7 @@ def test_ensure_required_tv_shows_config(mock_config):
 
 
 @responses.activate
-def test_get_tv_show_data(
+def test_get_tv_show_data_from_tmdb_from_tmdb(
     resp_tmdb_tv_series_details,
     resp_tmdb_tv_season_details,
 ):
@@ -59,7 +59,7 @@ def test_get_tv_show_data(
 
     client = TMDBClient(api_key="i-am-a-tmdb-api-key")
 
-    tv_series, tv_seasons = tv_shows.get_tv_show_data(
+    tv_series, tv_seasons = tv_shows.get_tv_show_data_from_tmdb(
         tv_series_id=series_id,
         client=client,
     )

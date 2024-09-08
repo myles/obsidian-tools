@@ -1,10 +1,10 @@
 ---
 title: "{{ movie.title }}"
 type: "Movie"
-tmdb_id: {{ movie.id }}
 tagline: "{{ movie.tagline }}"
+tmdb_id: {{ movie.tmdb_id }}
 ---
 
-![{{ movie.title }}](https://image.tmdb.org/t/p/original{{ movie.poster_path }})
+![{{ movie.title }}]({{ movie.cover_url }})
 
-{{ movie.overview }}
+{{ movie.description }}

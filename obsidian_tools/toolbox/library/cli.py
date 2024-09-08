@@ -130,16 +130,15 @@ def add_tv_show(ctx: click.Context, tv_series_id: int, write: bool) -> None:
             "TV_SHOWS_DIR_PATH must be set in the configuration file."
         )
 
-    tv_series, tv_seasons = tv_shows.get_tv_show_data(
-        tv_series_id=tv_series_id,
-        client=client,
+    tv_show = tv_shows.tmdb_tv_show_data_to_dataclasses(
+        *tv_shows.get_tv_show_data_from_tmdb(
+            tv_series_id=tv_series_id,
+            client=client,
+        )
     )
 
-    note_name = tv_shows.build_tv_show_note_name(tv_series=tv_series)
-    note_content = tv_shows.build_tv_show_note(
-        tv_series=tv_series,
-        tv_seasons=tv_seasons,
-    )
+    note_name = tv_shows.build_tv_show_note_name(tv_show)
+    note_content = tv_shows.build_tv_show_note(tv_show)
 
     if write is True:
         note_path = tv_shows.build_tv_show_note_path(
@@ -149,9 +148,9 @@ def add_tv_show(ctx: click.Context, tv_series_id: int, write: bool) -> None:
         if note_path.exists() is True:
             existing_note = tv_shows.load_tv_show_note(note_path)
 
-            if tv_shows.is_same_tv_show(tv_series, existing_note) is False:
+            if tv_shows.is_same_tv_show(tv_show, existing_note) is False:
                 alt_note_names = tv_shows.list_alternative_note_names(
-                    tv_series=tv_series, config=config
+                    tv_show, config=config
                 )
 
                 try:
@@ -219,15 +218,14 @@ def update_tv_shows(ctx: click.Context) -> None:
         )
 
     for path, post in tv_shows.list_tv_show_paths(config, has_tmdb_id=True):
-        tv_series, tv_seasons = tv_shows.get_tv_show_data(
-            tv_series_id=int(post["tmdb_id"]),
-            client=client,
+        tv_show = tv_shows.tmdb_tv_show_data_to_dataclasses(
+            *tv_shows.get_tv_show_data_from_tmdb(
+                tv_series_id=int(post["tmdb_id"]),
+                client=client,
+            )
         )
 
-        note_content = tv_shows.build_tv_show_note(
-            tv_series=tv_series,
-            tv_seasons=tv_seasons,
-        )
+        note_content = tv_shows.build_tv_show_note(tv_show)
 
         tv_shows.write_tv_show_note(
             file_path=path,
@@ -257,9 +255,11 @@ def add_movie(ctx: click.Context, movie_id: int, write: bool) -> None:
             "TV_SHOWS_DIR_PATH must be set in the configuration file."
         )
 
-    movie = movies.get_movie_data(movie_id=movie_id, client=client)
+    movie = movies.tmdb_move_data_to_movie(
+        movies.get_movie_data_from_tmdb(movie_id=movie_id, client=client)
+    )
 
-    note_name = movie["title"]
+    note_name = movies.build_movie_note_name(movie=movie)
     note_content = movies.build_movie_note(movie=movie)
 
     if write is True:

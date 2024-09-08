@@ -1,3 +1,4 @@
+import datetime
 from pathlib import Path
 from typing import Any, Dict, Generator, List, Tuple, TypedDict
 
@@ -7,6 +8,7 @@ from sanitize_filename import sanitize
 from obsidian_tools.config import Config
 from obsidian_tools.errors import ObsidianToolsConfigError
 from obsidian_tools.integrations import TMDBClient
+from obsidian_tools.toolbox.library.models import TVShow, TVShowEpisode, TVShowSeason
 from obsidian_tools.utils.humanize import and_join
 from obsidian_tools.utils.template import render_template
 
@@ -27,7 +29,23 @@ def ensure_required_tv_shows_config(config: Config) -> bool:
     return True
 
 
-def get_tv_show_data(
+def get_tv_show_season_data_from_tmdb(
+    tv_series_id: int,
+    season_number: int,
+    client: TMDBClient,
+) -> Dict[str, Any]:
+    """
+    Get the data for a TV show season.
+    """
+    _, resp_tv_season = client.get_tv_season_details(
+        series_id=tv_series_id,
+        season_number=season_number,
+    )
+    tv_season = resp_tv_season.json()
+    return tv_season
+
+
+def get_tv_show_data_from_tmdb(
     tv_series_id: int,
     client: TMDBClient,
 ) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
@@ -37,45 +55,81 @@ def get_tv_show_data(
     _, resp_tv_series = client.get_tv_series_details(series_id=tv_series_id)
     tv_series = resp_tv_series.json()
 
-    tv_seasons = []
-    for season_number in range(1, tv_series["number_of_seasons"] + 1):
-        _, resp_tv_season = client.get_tv_season_details(
-            series_id=tv_series["id"],
+    tv_seasons = [
+        get_tv_show_season_data_from_tmdb(
+            tv_series_id=tv_series_id,
             season_number=season_number,
+            client=client,
         )
-        tv_season = resp_tv_season.json()
-        tv_seasons.append(tv_season)
+        for season_number in range(1, tv_series["number_of_seasons"] + 1)
+    ]
 
     return tv_series, tv_seasons
 
 
-def build_tv_show_note(
+def tmdb_tv_show_data_to_dataclasses(
     tv_series: Dict[str, Any],
     tv_seasons: List[Dict[str, Any]],
-) -> str:
+) -> TVShow:
+    """
+    Convert TMDB TV show data to dataclasses.
+    """
+    transformed_tv_seasons = []
+
+    for tv_season in tv_seasons:
+        # Convert the episodes to TVShowEpisode dataclasses.
+        episodes = [
+            TVShowEpisode(
+                name=episode["name"],
+                episode_number=episode["episode_number"],
+                tmdb_id=episode["id"],
+            )
+            for episode in tv_season["episodes"]
+        ]
+
+        # Convert the season to a TVShowSeason dataclass.
+        transformed_tv_seasons.append(
+            TVShowSeason(
+                name=tv_season["name"],
+                season_number=tv_season["season_number"],
+                episodes=episodes,
+                tmdb_id=tv_season["id"],
+            )
+        )
+
+    return TVShow(
+        name=tv_series["name"],
+        description=tv_series["overview"],
+        cover_url=f"https://image.tmdb.org/t/p/original{tv_series['poster_path']}",
+        seasons=transformed_tv_seasons,
+        first_air_date=datetime.datetime.strptime(
+            tv_series["first_air_date"], "%Y-%m-%d"
+        ).date(),
+        origin_countries=tv_series["origin_country"],
+        tmdb_id=tv_series["id"],
+    )
+
+
+def build_tv_show_note(tv_show: TVShow) -> str:
     """
     Build the note for a TV show.
     """
-    content = render_template(
-        "library/tv_show.md",
-        tv_series=tv_series,
-        tv_seasons=tv_seasons,
-    )
+    content = render_template("library/tv_show.md", tv_show=tv_show)
     return content.strip()
 
 
-def build_tv_show_note_name(tv_series: Dict[str, Any]) -> str:
+def build_tv_show_note_name(tv_show: TVShow) -> str:
     """
     Build the name for a TV show note.
     """
-    return f"{tv_series['name']}"
+    return f"{tv_show.name}"
 
 
-def is_same_tv_show(tv_series: Dict[str, Any], post: frontmatter.Post) -> bool:
+def is_same_tv_show(tv_show: TVShow, post: frontmatter.Post) -> bool:
     """
     Check if the TV show data matches the note data.
     """
-    return tv_series["id"] == post["tmdb_id"]
+    return tv_show.tmdb_id == post["tmdb_id"]
 
 
 def load_tv_show_note(file_path: Path) -> frontmatter.Post:
@@ -96,16 +150,15 @@ class AltNoteName(TypedDict):
 
 
 def list_alternative_note_names(
-    tv_series: Dict[str, Any],
-    config: Config,
+    tv_show: TVShow, config: Config
 ) -> List[AltNoteName]:
     """
     List alternative note names for a TV show.
     """
     possible_note_names = [
-        build_tv_show_note_name(tv_series),
-        f"{tv_series['name']} ({tv_series['first_air_date'][:4]})",
-        f"{tv_series['name']} ({and_join(tv_series['origin_country'])})",
+        build_tv_show_note_name(tv_show),
+        f"{tv_show.name} ({tv_show.first_air_date.year})",
+        f"{tv_show.name} ({and_join(tv_show.origin_countries)})",
     ]
 
     note_names = []
@@ -121,7 +174,7 @@ def list_alternative_note_names(
             "path": note_path,
             "does_exist": note_path.exists(),
             "is_same": (
-                is_same_tv_show(tv_series, post) if post is not None else False
+                is_same_tv_show(tv_show, post) if post is not None else False
             ),
         }
         note_names.append(alt_note_name)

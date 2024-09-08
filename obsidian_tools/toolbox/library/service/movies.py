@@ -6,6 +6,7 @@ from sanitize_filename import sanitize
 from obsidian_tools.config import Config
 from obsidian_tools.errors import ObsidianToolsConfigError
 from obsidian_tools.integrations import TMDBClient
+from obsidian_tools.toolbox.library.models import Movie
 from obsidian_tools.utils.template import render_template
 
 
@@ -25,7 +26,7 @@ def ensure_required_movies_config(config: Config) -> bool:
     return True
 
 
-def get_movie_data(
+def get_movie_data_from_tmdb(
     movie_id: int,
     client: TMDBClient,
 ) -> Dict[str, Any]:
@@ -38,7 +39,27 @@ def get_movie_data(
     return movie
 
 
-def build_movie_note(movie: Dict[str, Any]) -> str:
+def tmdb_move_data_to_movie(movie_data: Dict[str, Any]) -> Movie:
+    """
+    Transform the data from TMDB to a Movie.
+    """
+    return Movie(
+        title=movie_data["title"],
+        tagline=movie_data["tagline"],
+        description=movie_data["overview"],
+        cover_url=f"https://image.tmdb.org/t/p/original{movie_data['poster_path']}",
+        tmdb_id=movie_data["id"],
+    )
+
+
+def build_movie_note_name(movie: Movie) -> str:
+    """
+    Build the name for a Movie note.
+    """
+    return movie.title
+
+
+def build_movie_note(movie: Movie) -> str:
     """
     Build the note for a Movie.
     """
