@@ -4,6 +4,21 @@ from requests.auth import AuthBase
 
 from obsidian_tools.utils.http_client import HttpClient, RequestReturn
 
+DISCOGS_CURRENCY_ABBR = Literal[
+    "USD",
+    "GBP",
+    "EUR",
+    "CAD",
+    "AUD",
+    "JPY",
+    "CHF",
+    "MXN",
+    "BRL",
+    "NZD",
+    "SEK",
+    "ZAR",
+]
+
 
 class DiscogsAuth(AuthBase):
     def __init__(self, token: str):
@@ -26,22 +41,7 @@ class DiscogsClient(HttpClient):
     def get_release(
         self,
         release_id: int,
-        curr_abbr: Optional[
-            Literal[
-                "USD",
-                "GBP",
-                "EUR",
-                "CAD",
-                "AUD",
-                "JPY",
-                "CHF",
-                "MXN",
-                "BRL",
-                "NZD",
-                "SEK",
-                "ZAR",
-            ]
-        ] = None,
+        curr_abbr: Optional[DISCOGS_CURRENCY_ABBR] = None,
         **kwargs,
     ) -> RequestReturn:
         """

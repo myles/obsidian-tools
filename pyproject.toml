@@ -41,7 +41,7 @@ line-length = 80
 profile = "black"
 
 [[tool.mypy.overrides]]
-module = ["sanitize_filename"]
+module = ["sanitize_filename", "frontmatter"]
 ignore_missing_imports = true
 
 [build-system]

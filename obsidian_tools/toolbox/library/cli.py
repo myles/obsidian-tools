@@ -21,8 +21,8 @@ from obsidian_tools.toolbox.library.service import (
     video_games,
     vinyl_records,
 )
+from obsidian_tools.utils.click_utils import write_option
 from obsidian_tools.utils.dataclasses import merge_dataclasses
-from obsidian_tools.utils.decorators import write_option
 
 
 @click.group()
@@ -311,7 +311,10 @@ def add_vinyl(
         discogs_release_id = questionary.select(
             "Which release?",
             choices=[
-                questionary.Choice(title=release["title"], value=release["id"])
+                questionary.Choice(
+                    title=f"{release['id']} — {release['title']}",
+                    value=release["id"],
+                )
                 for release in releases
             ],
         ).ask()

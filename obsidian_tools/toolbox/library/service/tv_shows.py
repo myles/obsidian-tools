@@ -116,18 +116,15 @@ def list_alternative_note_names(
         except FileNotFoundError:
             post = None
 
-        note_names.append(
-            {
-                "name": note_name,
-                "path": note_path,
-                "does_exist": note_path.exists(),
-                "is_same": (
-                    is_same_tv_show(tv_series, post)
-                    if post is not None
-                    else False
-                ),
-            }
-        )
+        alt_note_name: AltNoteName = {
+            "name": note_name,
+            "path": note_path,
+            "does_exist": note_path.exists(),
+            "is_same": (
+                is_same_tv_show(tv_series, post) if post is not None else False
+            ),
+        }
+        note_names.append(alt_note_name)
 
     return note_names
 
@@ -168,6 +165,13 @@ def list_tv_show_paths(
     """
     List the paths of TV show notes.
     """
+    # This is just a sanity check. The ensure_required_tv_shows_config function
+    # should catch this.
+    if not config.TV_SHOWS_DIR_PATH:
+        raise ValueError(
+            "TV_SHOWS_DIR_PATH must be set in the configuration file."
+        )
+
     for file_path in config.TV_SHOWS_DIR_PATH.glob("*.md"):
         try:
             post = load_tv_show_note(file_path)
