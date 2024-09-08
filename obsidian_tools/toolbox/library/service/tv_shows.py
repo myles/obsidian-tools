@@ -8,7 +8,7 @@ from sanitize_filename import sanitize
 from obsidian_tools.config import Config
 from obsidian_tools.errors import ObsidianToolsConfigError
 from obsidian_tools.integrations import TMDBClient
-from obsidian_tools.toolbox.library.models import TVShow, TVShowEpisode, TVShowSeason
+from obsidian_tools.toolbox.library import models
 from obsidian_tools.utils.humanize import and_join
 from obsidian_tools.utils.template import render_template
 
@@ -70,7 +70,7 @@ def get_tv_show_data_from_tmdb(
 def tmdb_tv_show_data_to_dataclasses(
     tv_series: Dict[str, Any],
     tv_seasons: List[Dict[str, Any]],
-) -> TVShow:
+) -> models.TVShow:
     """
     Convert TMDB TV show data to dataclasses.
     """
@@ -79,7 +79,7 @@ def tmdb_tv_show_data_to_dataclasses(
     for tv_season in tv_seasons:
         # Convert the episodes to TVShowEpisode dataclasses.
         episodes = [
-            TVShowEpisode(
+            models.TVShowEpisode(
                 name=episode["name"],
                 episode_number=episode["episode_number"],
                 tmdb_id=episode["id"],
@@ -89,7 +89,7 @@ def tmdb_tv_show_data_to_dataclasses(
 
         # Convert the season to a TVShowSeason dataclass.
         transformed_tv_seasons.append(
-            TVShowSeason(
+            models.TVShowSeason(
                 name=tv_season["name"],
                 season_number=tv_season["season_number"],
                 episodes=episodes,
@@ -97,7 +97,7 @@ def tmdb_tv_show_data_to_dataclasses(
             )
         )
 
-    return TVShow(
+    return models.TVShow(
         name=tv_series["name"],
         description=tv_series["overview"],
         cover_url=f"https://image.tmdb.org/t/p/original{tv_series['poster_path']}",
@@ -110,7 +110,7 @@ def tmdb_tv_show_data_to_dataclasses(
     )
 
 
-def build_tv_show_note(tv_show: TVShow) -> str:
+def build_tv_show_note(tv_show: models.TVShow) -> str:
     """
     Build the note for a TV show.
     """
@@ -118,14 +118,14 @@ def build_tv_show_note(tv_show: TVShow) -> str:
     return content.strip()
 
 
-def build_tv_show_note_name(tv_show: TVShow) -> str:
+def build_tv_show_note_name(tv_show: models.TVShow) -> str:
     """
     Build the name for a TV show note.
     """
     return f"{tv_show.name}"
 
 
-def is_same_tv_show(tv_show: TVShow, post: frontmatter.Post) -> bool:
+def is_same_tv_show(tv_show: models.TVShow, post: frontmatter.Post) -> bool:
     """
     Check if the TV show data matches the note data.
     """
@@ -150,7 +150,7 @@ class AltNoteName(TypedDict):
 
 
 def list_alternative_note_names(
-    tv_show: TVShow, config: Config
+    tv_show: models.TVShow, config: Config
 ) -> List[AltNoteName]:
     """
     List alternative note names for a TV show.
