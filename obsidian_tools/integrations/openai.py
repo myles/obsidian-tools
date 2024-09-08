@@ -1,7 +1,9 @@
+from dataclasses import asdict, dataclass
+from typing import List, Union
+
 from requests.auth import AuthBase
-from typing import Union, Literal, List
+
 from obsidian_tools.utils.http_client import HttpClient, RequestReturn
-from dataclasses import dataclass, asdict
 
 
 @dataclass
@@ -34,7 +36,7 @@ class OpenAIAuth(AuthBase):
         self,
         api_key: str,
         organization_id: str,
-        project_id: Union[str, None] = None
+        project_id: Union[str, None] = None,
     ):
         self.api_key = api_key
         self.organization_id = organization_id
@@ -43,7 +45,7 @@ class OpenAIAuth(AuthBase):
     def __call__(self, request):
         request.headers["Authorization"] = f"Bearer {self.api_key}"
 
-        request.headers["OpenAI-Organization"]  = self.organization_id
+        request.headers["OpenAI-Organization"] = self.organization_id
 
         if self.project_id is not None:
             request.headers["OpenAI-Project"] = self.project_id
@@ -63,7 +65,11 @@ class OpenAIClient(HttpClient):
         project_id: Union[str, None] = None,
         **kwargs,
     ):
-        auth = OpenAIAuth(api_key=api_key, organization_id=organization_id, project_id=project_id)
+        auth = OpenAIAuth(
+            api_key=api_key,
+            organization_id=organization_id,
+            project_id=project_id,
+        )
         super().__init__(auth=auth, **kwargs)
 
         self.base_url = "https://api.openai.com/v1"
