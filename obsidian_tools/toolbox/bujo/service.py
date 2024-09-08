@@ -1,17 +1,13 @@
 import datetime
 from pathlib import Path
-from typing import List, TypedDict, Union
 
 from obsidian_tools.config import Config
 from obsidian_tools.errors import (
     ObsidianToolsConfigError,
     ObsidianToolsPluginNotFoundError,
 )
-from obsidian_tools.utils.clock import (
-    get_end_of_month,
-    get_range_between_dates,
-    get_start_of_month,
-)
+from obsidian_tools.toolbox.bujo.models import Day, Month, Week
+from obsidian_tools.utils import clock
 from obsidian_tools.utils.momentjs import format
 from obsidian_tools.utils.template import render_template
 
@@ -33,7 +29,7 @@ def ensure_required_config(config: Config) -> bool:
 
 
 def get_monthly_log_file_path(
-    date: Union[datetime.date, datetime.datetime],
+    date: datetime.date,
     config: Config,
 ) -> Path:
     """
@@ -53,8 +49,24 @@ def get_monthly_log_file_path(
     return config.MONTHLY_NOTE_FOLDER / file_name
 
 
+def get_weekly_log_file_path(date: datetime.date, config: Config) -> Path:
+    """
+    Get the path to the weekly log folder for the given date.
+    """
+    if config.WEEKLY_NOTE_FORMAT is None:
+        raise ValueError("WEEKLY_NOTE_FORMAT must be set in the configuration.")
+
+    file_stem = format(date, config.WEEKLY_NOTE_FORMAT)
+    file_name = f"{file_stem}.md"
+
+    # If the weekly note folder is not set, return the file path in the vault.
+    if config.WEEKLY_NOTE_FOLDER is None:
+        return config.VAULT_PATH / file_name
+    return config.WEEKLY_NOTE_FOLDER / file_name
+
+
 def get_daily_log_file_path(
-    date: Union[datetime.date, datetime.datetime],
+    date: datetime.date,
     config: Config,
 ) -> Path:
     """
@@ -72,100 +84,82 @@ def get_daily_log_file_path(
     return config.VAULT_PATH / config.OBSIDIAN.daily_note_folder / file_name
 
 
-class MonthlyLogDayContext(TypedDict):
-    date: datetime.date
-    week_number: str
-    daily_log_file_name: str
-
-
-class MonthlyLogContext(TypedDict):
-    start_of_month: datetime.date
-    end_of_month: datetime.date
-    start_of_next_month: datetime.date
-    start_of_previous_month: datetime.date
-    days: List[MonthlyLogDayContext]
-
-
-def get_monthly_log_context_for_day(
-    date: Union[datetime.date, datetime.datetime],
-    config: Config,
-) -> MonthlyLogDayContext:
+def day_to_dataclass(date: datetime.date, config: Config) -> Day:
     """
-    Get the context for the monthly log template for the given date.
+    Convert a date to a Day dataclass.
     """
-    return {
-        "date": date if isinstance(date, datetime.date) else date.date(),  # type: ignore
-        "week_number": f"{date.isocalendar().year}-{date.isocalendar().week}",
-        "daily_log_file_name": get_daily_log_file_path(date, config).stem,
-    }
-
-
-def get_monthly_log_context(
-    month_date: Union[datetime.date, datetime.datetime],
-    config: Config,
-) -> MonthlyLogContext:
-    """
-    Get the context for the monthly log template.
-    """
-    start_of_month = get_start_of_month(month_date)
-    end_of_month = get_end_of_month(month_date)
-
-    start_of_next_month = get_start_of_month(
-        end_of_month + datetime.timedelta(days=1)
-    )
-    start_of_previous_month = get_start_of_month(
-        start_of_month - datetime.timedelta(days=1)
+    return Day(
+        date=date,
+        daily_log_file_path=get_daily_log_file_path(date, config=config),
     )
 
-    days = []
-    for day_date in get_range_between_dates(start_of_month, end_of_month):
-        days.append(get_monthly_log_context_for_day(day_date, config))
 
-    return {
-        "start_of_month": start_of_month,
-        "end_of_month": end_of_month,
-        "start_of_next_month": start_of_next_month,
-        "start_of_previous_month": start_of_previous_month,
-        "days": days,
-    }
+def week_to_dataclass(week_date: datetime.date, config: Config) -> Week:
+    """
+    Convert a start of week date to a Week dataclass.
+    """
+    start_of_week = clock.get_start_of_week(week_date)
+    end_of_week = clock.get_end_of_week(week_date)
+
+    days = [
+        day_to_dataclass(day, config)
+        for day in clock.get_range_between_dates(start_of_week, end_of_week)
+    ]
+
+    calendar_date = start_of_week.isocalendar()
+
+    week_number = f"{calendar_date.year}-{str(calendar_date.week).zfill(2)}"
+
+    return Week(
+        week_number=week_number,
+        weekly_log_file_path=get_weekly_log_file_path(start_of_week, config),
+        days=days,
+    )
 
 
-def build_monthly_log_note(
-    date: Union[datetime.date, datetime.datetime],
-    config: Config,
-) -> str:
+def month_to_dataclass(month_date: datetime.date, config: Config) -> Month:
+    """
+    Convert a month date to a Month dataclass.
+    """
+    weeks = [
+        week_to_dataclass(start_of_week, config)
+        for start_of_week in clock.get_range_between_dates(
+            clock.get_start_of_month(month_date),
+            clock.get_end_of_month(month_date),
+            step=7,
+        )
+    ]
+
+    return Month(
+        monthly_log_file_path=get_monthly_log_file_path(month_date, config),
+        weeks=weeks,
+    )
+
+
+def build_monthly_log_note(date: datetime.date, config: Config) -> str:
     """
     Build the content for the monthly log note for the given date.
     """
-    context = get_monthly_log_context(date, config)
-    content = render_template("bujo/monthly_log.md", **context)
+    month = month_to_dataclass(date, config)
+
+    content = render_template(
+        "bujo/monthly_log.md",
+        month=month,
+    )
     return content.strip()
 
 
-def get_monthly_log_path(
-    date: Union[datetime.date, datetime.datetime],
-    config: Config,
-) -> Path:
+def build_weekly_log_note(date: datetime.date, config: Config) -> str:
     """
-    Get the path to the monthly log note for the given date.
+    Build the content for the weekly log note for the given date.
     """
-    if not config.MONTHLY_NOTE_FOLDER:
-        raise ValueError(
-            "MONTHLY_NOTE_FOLDER must be set in the configuration file."
-        )
+    week = week_to_dataclass(date, config)
 
-    if not config.MONTHLY_NOTE_FORMAT:
-        raise ValueError(
-            "MONTHLY_NOTE_FORMAT must be set in the configuration file."
-        )
-
-    note_name = format(date, config.MONTHLY_NOTE_FORMAT)
-
-    file_name = f"{note_name}.md"
-    return config.MONTHLY_NOTE_FOLDER / file_name
+    content = render_template("bujo/weekly_log.md", week=week)
+    return content.strip()
 
 
-def write_monthly_log_note(file_path: Path, note_content: str) -> Path:
+def write_log_note(file_path: Path, note_content: str) -> Path:
     """
     Write the monthly log note to the vault.
     """

@@ -4,6 +4,9 @@ VAULT_PATH = "vault"
 MONTHLY_NOTE_FORMAT = "YYYY-MM"
 MONTHLY_NOTE_FOLDER = "bujo/monthly-logs"
 
+WEEKLY_NOTE_FORMAT = "YYYY-WW"
+WEEKLY_NOTE_FOLDER = "bujo/weekly-logs"
+
 # Media tools configuration
 TMDB_API_KEY = "i-am-a-fake-tmdb-api-key"
 

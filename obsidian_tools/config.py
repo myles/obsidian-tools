@@ -50,6 +50,9 @@ class Config:
     MONTHLY_NOTE_FORMAT: Optional[str] = None
     MONTHLY_NOTE_FOLDER: Optional[Path] = None
 
+    WEEKLY_NOTE_FORMAT: Optional[str] = None
+    WEEKLY_NOTE_FOLDER: Optional[Path] = None
+
     # Media tools configuration
     DISCOGS_PERSONAL_ACCESS_TOKEN: Optional[str] = None
 
@@ -89,40 +92,25 @@ class Config:
 
         config["OBSIDIAN"] = ObsidianConfig.from_vault(config["VAULT_PATH"])
 
-        if "MONTHLY_NOTE_FOLDER" in config:
-            config["MONTHLY_NOTE_FOLDER"] = (
-                config["VAULT_PATH"] / config["MONTHLY_NOTE_FOLDER"]
-            )
+        transform_to_path_root_keys = (
+            "MONTHLY_NOTE_FOLDER",
+            "WEEKLY_NOTE_FOLDER",
+            "LIBRARY_DIR_PATH",
+        )
+        for key in transform_to_path_root_keys:
+            if key in config:
+                config[key] = config["VAULT_PATH"] / config[key]
 
-        if "LIBRARY_DIR_PATH" in config:
-            config["LIBRARY_DIR_PATH"] = (
-                config["VAULT_PATH"] / config["LIBRARY_DIR_PATH"]
-            )
-
-        if "BOOKS_DIR_PATH" in config:
-            config["BOOKS_DIR_PATH"] = (
-                config["LIBRARY_DIR_PATH"] / config["BOOKS_DIR_PATH"]
-            )
-
-        if "TV_SHOWS_DIR_PATH" in config:
-            config["TV_SHOWS_DIR_PATH"] = (
-                config["LIBRARY_DIR_PATH"] / config["TV_SHOWS_DIR_PATH"]
-            )
-
-        if "MOVIES_DIR_PATH" in config:
-            config["MOVIES_DIR_PATH"] = (
-                config["LIBRARY_DIR_PATH"] / config["MOVIES_DIR_PATH"]
-            )
-
-        if "VIDEO_GAMES_DIR_PATH" in config:
-            config["VIDEO_GAMES_DIR_PATH"] = (
-                config["LIBRARY_DIR_PATH"] / config["VIDEO_GAMES_DIR_PATH"]
-            )
-
-        if "VINYL_RECORDS_DIR_PATH" in config:
-            config["VINYL_RECORDS_DIR_PATH"] = (
-                config["LIBRARY_DIR_PATH"] / config["VINYL_RECORDS_DIR_PATH"]
-            )
+        transform_to_path_library_keys = (
+            "BOOKS_DIR_PATH",
+            "TV_SHOWS_DIR_PATH",
+            "MOVIES_DIR_PATH",
+            "VIDEO_GAMES_DIR_PATH",
+            "VINYL_RECORDS_DIR_PATH",
+        )
+        for key in transform_to_path_library_keys:
+            if key in config:
+                config[key] = config["LIBRARY_DIR_PATH"] / config[key]
 
         safe_keys = list(cls.__annotations__.keys())
         to_remove = [key for key in config.keys() if key not in safe_keys]
