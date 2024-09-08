@@ -1,0 +1,155 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 1,
+    "per_page": 50,
+    "items": 2,
+    "urls": {}
+  },
+  "results": [
+    {
+      "country": "Worldwide",
+      "year": "2024",
+      "format": [
+        "Vinyl",
+        "7\"",
+        "33 ⅓ RPM",
+        "Record Store Day",
+        "Single"
+      ],
+      "label": [
+        "Geffen Records",
+        "Mercury",
+        "Republic Records",
+        "BBC",
+        "UMG Recordings, Inc.",
+        "Geffen Records",
+        "Mercury",
+        "Republic Records",
+        "UMG Commercial Services",
+        "BBC",
+        "Olivia Rodrigo",
+        "MPO",
+        "BBC Radio 1's Live Lounge"
+      ],
+      "type": "release",
+      "genre": [
+        "Pop"
+      ],
+      "style": [
+        "Alt-Pop",
+        "Folk"
+      ],
+      "id": 30392138,
+      "barcode": [
+        "602465208375",
+        "6 02465 20837 5",
+        "[MPO logo]®24 332818 [MPO logo]® 24 332863 ZvC- LL 2023 A",
+        "[MPO logo]®24 335273 ZvC- LL 2023 B [MPO logo]®24 335266"
+      ],
+      "user_data": {
+        "in_wantlist": false,
+        "in_collection": false
+      },
+      "master_id": 3562046,
+      "master_url": "https://api.discogs.com/masters/3562046",
+      "uri": "/release/30392138-Olivia-Rodrigo-Noah-Kahan-Stick-Season-Lacy",
+      "catno": "602465208375",
+      "title": "Olivia Rodrigo / Noah Kahan - Stick Season / Lacy",
+      "thumb": "https://i.discogs.com/eeEplsBlKbu9FGlXbMAhsNwvI8tTZCrp174yG5wauqc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzMtNDg2MC5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/Xi-pgVGsb1JuQXqYIXe_tfzJ5ikpexW1V_f2QdFDFW4/rs:fit/g:sm/q:90/h:589/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzky/MTM4LTE3MTM2Mjk5/MzMtNDg2MC5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/30392138",
+      "community": {
+        "want": 3642,
+        "have": 13646
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Mauve",
+          "descriptions": [
+            "7\"",
+            "33 ⅓ RPM",
+            "Record Store Day",
+            "Single"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2024",
+      "format": [
+        "Vinyl",
+        "7\"",
+        "33 ⅓ RPM",
+        "Single",
+        "Reissue"
+      ],
+      "label": [
+        "Geffen Records",
+        "Mercury",
+        "Republic Records",
+        "BBC",
+        "UMG Recordings, Inc.",
+        "Republic Records",
+        "Mercury",
+        "Geffen Records",
+        "UMG Commercial Services",
+        "BBC",
+        "BBC",
+        "Olivia Rodrigo",
+        "MPO",
+        "BBC Radio 1's Live Lounge"
+      ],
+      "type": "release",
+      "genre": [
+        "Pop",
+        "Folk, World, & Country"
+      ],
+      "style": [
+        "Alt-Pop",
+        "Folk"
+      ],
+      "id": 31409480,
+      "barcode": [
+        "6 02465 37076 8",
+        "602465370768",
+        "[MPO logo]®24 333269 ZvC LL 2023 A",
+        "[MPO logo]® 24 335686 ZvC LL 2023 B"
+      ],
+      "user_data": {
+        "in_wantlist": false,
+        "in_collection": false
+      },
+      "master_id": 3562046,
+      "master_url": "https://api.discogs.com/masters/3562046",
+      "uri": "/release/31409480-Olivia-Rodrigo-Noah-Kahan-Stick-Season-Lacy",
+      "catno": "00602465370768",
+      "title": "Olivia Rodrigo / Noah Kahan - Stick Season / Lacy",
+      "thumb": "https://i.discogs.com/n58Rem5AENLYXku0XqWgjGgRgyGIHY7zZW1sHL00MfY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMxNDA5/NDgwLTE3MjI5MDI1/ODMtNTQyOC5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/vzIOuK70Uxmyw8gvvSP2fuElDV2jo9zyOncg3iBFo0Y/rs:fit/g:sm/q:90/h:594/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMxNDA5/NDgwLTE3MjI5MDI1/ODMtNTQyOC5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/31409480",
+      "community": {
+        "want": 22,
+        "have": 129
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Mauve Marbled",
+          "descriptions": [
+            "7\"",
+            "33 ⅓ RPM",
+            "Single",
+            "Reissue"
+          ]
+        }
+      ]
+    }
+  ]
+}

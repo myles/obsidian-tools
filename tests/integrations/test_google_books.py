@@ -23,7 +23,7 @@ def test_google_books_client__get_book_by_isbn(resp_google_books_volumes):
             url="https://www.googleapis.com/books/v1/volumes",
             json=resp_google_books_volumes,
             status=200,
-            match=[query_param_matcher({"q": f"isbn%3A{isbn}"})],
+            match=[query_param_matcher({"q": f"isbn:{isbn}"})],
         )
     )
 
