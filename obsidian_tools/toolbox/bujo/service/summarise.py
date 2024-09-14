@@ -2,7 +2,8 @@
 Module for summarising the Bullet Journal logs.
 """
 
-from typing import List
+import typing as t
+from pathlib import Path
 
 from frontmatter import Post
 
@@ -13,15 +14,24 @@ from obsidian_tools.integrations.openai import (
 )
 
 
-def summarise_daily_logs(daily_logs: List[Post], client: OpenAIClient):
+def summarise_daily_logs(
+    daily_logs: t.List[t.Tuple[Path, Post]], client: OpenAIClient
+):
     """
     Summarise daily logs.
     """
+    daily_logs_sorted = sorted(
+        daily_logs,
+        key=lambda daily_log: daily_log[0].stem,
+    )
+
     messages = [
         ChatMessageSystem(
             content="I would like you to summarise my daily logs."
         ),
-        ChatMessageUser(content=[post.content for post in daily_logs]),
+        ChatMessageUser(
+            content=[post.content for path, post in daily_logs_sorted]
+        ),
     ]
 
     request, response = client.chat_completion(messages)
