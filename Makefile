@@ -24,14 +24,14 @@ coverage: coverage.xml
 
 .PHONY: lint
 lint:
-	poetry run black --check .
 	poetry run isort --check .
+	poetry run black --check .
 	poetry run ruff check .
 
 .PHONY: lintfix
 lintfix:
-	poetry run black .
 	poetry run isort .
+	poetry run black .
 	poetry run ruff check . --fix
 
 .PHONY: prettier
