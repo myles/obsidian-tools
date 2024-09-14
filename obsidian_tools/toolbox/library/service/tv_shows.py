@@ -1,7 +1,6 @@
 import datetime
 from pathlib import Path
-from typing import Any, Dict, Generator, List, Tuple, TypedDict
-
+import typing as t
 import frontmatter
 from sanitize_filename import sanitize
 
@@ -33,7 +32,7 @@ def get_tv_show_season_data_from_tmdb(
     tv_series_id: int,
     season_number: int,
     client: TMDBClient,
-) -> Dict[str, Any]:
+) -> t.Dict[str, t.Any]:
     """
     Get the data for a TV show season.
     """
@@ -48,7 +47,7 @@ def get_tv_show_season_data_from_tmdb(
 def get_tv_show_data_from_tmdb(
     tv_series_id: int,
     client: TMDBClient,
-) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
+) -> t.Tuple[t.Dict[str, t.Any], t.List[t.Dict[str, t.Any]]]:
     """
     Get the data for a TV show.
     """
@@ -68,8 +67,8 @@ def get_tv_show_data_from_tmdb(
 
 
 def tmdb_tv_show_data_to_dataclasses(
-    tv_series: Dict[str, Any],
-    tv_seasons: List[Dict[str, Any]],
+    tv_series: t.Dict[str, t.Any],
+    tv_seasons: t.List[t.Dict[str, t.Any]],
 ) -> models.TVShow:
     """
     Convert TMDB TV show data to dataclasses.
@@ -97,14 +96,18 @@ def tmdb_tv_show_data_to_dataclasses(
             )
         )
 
+    first_air_date: t.Union[datetime.date, None] = None
+    if tv_series["first_air_date"]:
+        first_air_date = datetime.datetime.strptime(
+            tv_series["first_air_date"], "%Y-%m-%d"
+        ).date()
+
     return models.TVShow(
         name=tv_series["name"],
         description=tv_series["overview"],
         cover_url=f"https://image.tmdb.org/t/p/original{tv_series['poster_path']}",
         seasons=transformed_tv_seasons,
-        first_air_date=datetime.datetime.strptime(
-            tv_series["first_air_date"], "%Y-%m-%d"
-        ).date(),
+        first_air_date=first_air_date,
         origin_countries=tv_series["origin_country"],
         tmdb_id=tv_series["id"],
     )
@@ -141,7 +144,7 @@ def load_tv_show_note(file_path: Path) -> frontmatter.Post:
     return post
 
 
-class AltNoteName(TypedDict):
+class AltNoteName(t.TypedDict):
 
     name: str
     path: Path
@@ -151,9 +154,9 @@ class AltNoteName(TypedDict):
 
 def list_alternative_note_names(
     tv_show: models.TVShow, config: Config
-) -> List[AltNoteName]:
+) -> t.List[AltNoteName]:
     """
-    List alternative note names for a TV show.
+    t.List alternative note names for a TV show.
     """
     possible_note_names = [build_tv_show_note_name(tv_show)]
 
@@ -220,9 +223,9 @@ def write_tv_show_note(
 def list_tv_show_paths(
     config: Config,
     has_tmdb_id: bool = False,
-) -> Generator[Tuple[Path, frontmatter.Post], None, None]:
+) -> t.Generator[t.Tuple[Path, frontmatter.Post], None, None]:
     """
-    List the paths of TV show notes.
+    t.List the paths of TV show notes.
     """
     # This is just a sanity check. The ensure_required_tv_shows_config function
     # should catch this.
@@ -231,7 +234,12 @@ def list_tv_show_paths(
             "TV_SHOWS_DIR_PATH must be set in the configuration file."
         )
 
-    for file_path in config.TV_SHOWS_DIR_PATH.glob("*.md"):
+    file_paths = sorted(
+        config.TV_SHOWS_DIR_PATH.glob("*.md"),
+        key=lambda p: p.stem,
+    )
+
+    for file_path in file_paths:
         try:
             post = load_tv_show_note(file_path)
         except FileNotFoundError:
