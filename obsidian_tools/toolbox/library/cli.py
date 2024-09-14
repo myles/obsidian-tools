@@ -218,9 +218,11 @@ def update_tv_shows(ctx: click.Context) -> None:
         )
 
     for path, post in tv_shows.list_tv_show_paths(config, has_tmdb_id=True):
-        tv_series_data_from_tmdb, tv_seasons_data_from_tmdb = tv_shows.get_tv_show_data_from_tmdb(
-            tv_series_id=int(post["tmdb_id"]),
-            client=client,
+        tv_series_data_from_tmdb, tv_seasons_data_from_tmdb = (
+            tv_shows.get_tv_show_data_from_tmdb(
+                tv_series_id=int(post["tmdb_id"]),
+                client=client,
+            )
         )
         tv_show = tv_shows.tmdb_tv_show_data_to_dataclasses(
             tv_series=tv_series_data_from_tmdb,

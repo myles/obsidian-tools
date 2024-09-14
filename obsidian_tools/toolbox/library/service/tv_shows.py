@@ -1,6 +1,7 @@
 import datetime
-from pathlib import Path
 import typing as t
+from pathlib import Path
+
 import frontmatter
 from sanitize_filename import sanitize
 
