@@ -9,6 +9,7 @@ include = ["obsidian_tools/templates/*"]
 [tool.poetry.dependencies]
 python = "^3.11"
 click = "^8.1.7"
+fuzzywuzzy = "^0.18.0"
 jinja2 = "^3.1.4"
 python-frontmatter = "^1.1.0"
 questionary = "^2.0.1"

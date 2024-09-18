@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 from typing import Any, Dict, Generator, List, Optional, Tuple, Union
-
+from fuzzywuzzy import process
 import frontmatter
 from sanitize_filename import sanitize
 
@@ -244,3 +244,17 @@ def list_books_path(
             continue
 
         yield file_path, post
+
+
+def search_books(
+    search_term: str,
+    books: List[Tuple[Path, frontmatter.Post]],
+) -> List[Tuple[Path, frontmatter.Post]]:
+    """
+    Search the Obsidian vault for books.
+    """
+    return process.extract(
+        query=search_term,
+        choices=[str(post["title"]) for _path, post in books],
+        limit=10,
+    )
