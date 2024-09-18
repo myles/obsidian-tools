@@ -113,6 +113,35 @@ def add_book(ctx: click.Context, isbn: str, write: bool) -> None:
 
 @cli.command()
 @click.pass_context
+@click.argument("search_query", type=str, required=False)
+def search_books(ctx: click.Context, search_query: Union[str, None] = None) -> None:
+    """
+    Search for books.
+    """
+    config: Config = ctx.obj["config"]
+
+    books.ensure_required_books_config(config)
+
+    if not search_books:
+        search_query = click.prompt("Enter a search query")
+
+    results = books.search_books(search_query, books=list(books.list_books_path(config)))
+
+    if not results:
+        return click.echo("No results found.")
+
+    book = questionary.select(
+        "Which book?",
+        choices=[
+            questionary.Choice(title=book['title'], value=(path, book))
+            for path, book in results
+        ],
+    ).ask()
+    click.echo(book[0])
+
+
+@cli.command()
+@click.pass_context
 @click.argument("tv_series_id", type=int)
 @write_option
 def add_tv_show(ctx: click.Context, tv_series_id: int, write: bool) -> None:
@@ -218,9 +247,11 @@ def update_tv_shows(ctx: click.Context) -> None:
         )
 
     for path, post in tv_shows.list_tv_show_paths(config, has_tmdb_id=True):
-        tv_series_data_from_tmdb, tv_seasons_data_from_tmdb = tv_shows.get_tv_show_data_from_tmdb(
-            tv_series_id=int(post["tmdb_id"]),
-            client=client,
+        tv_series_data_from_tmdb, tv_seasons_data_from_tmdb = (
+            tv_shows.get_tv_show_data_from_tmdb(
+                tv_series_id=int(post["tmdb_id"]),
+                client=client,
+            )
         )
         tv_show = tv_shows.tmdb_tv_show_data_to_dataclasses(
             tv_series=tv_series_data_from_tmdb,
