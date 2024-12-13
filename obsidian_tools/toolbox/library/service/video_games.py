@@ -44,7 +44,7 @@ def get_game_data_from_igdb(
     """
     Get the data of a video game from IGDB.
     """
-    _, resp_game = client.get_game(game_id=game_id)
+    _, resp_game = client.get_game(game_id=int(game_id))
     game = resp_game.json()[0]
 
     _, resp_cover = client.get_cover(cover_id=game["cover"])

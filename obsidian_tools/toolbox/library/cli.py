@@ -87,15 +87,15 @@ def add_book(ctx: click.Context, isbn: str, write: bool, force: bool) -> None:
     gb_book: Union[Book, None] = None
 
     try:
-        book_data, works_data, authors_data = (
+        ol_book_data, ol_works_data, ol_authors_data = (
             books.get_book_data_from_openlibrary(
                 isbn=isbn, client=open_library_client
             )
         )
         ol_book = books.openlibrary_data_to_dataclass(
-            book_data=book_data,
-            works_data=works_data,
-            authors_data=authors_data,
+            book_data=ol_book_data,
+            works_data=ol_works_data,
+            authors_data=ol_authors_data,
         )
     except Timeout:
         click.echo("Open Library request timed out.", err=True)
@@ -106,10 +106,11 @@ def add_book(ctx: click.Context, isbn: str, write: bool, force: bool) -> None:
         click.echo("Book not found on Open Library.", err=True)
 
     try:
-        book_data = books.get_book_data_from_google_books(
+        gb_book_data = books.get_book_data_from_google_books(
             isbn=isbn, client=google_books_client
         )
-        gb_book = books.google_books_data_to_dataclass(book_data)
+        if gb_book_data is not None:
+            gb_book = books.google_books_data_to_dataclass(gb_book_data)
     except Timeout:
         click.echo("Google Books request timed out.", err=True)
     except HTTPError as http_error:
@@ -178,7 +179,7 @@ def add_tv_show(
     if search_query is not None or tmdb_id is not None:
         search_results = tv_shows.search_tv_series_on_tmdb(
             client=client,
-            query=search_query,
+            query=search_query or "",
         )
         tmdb_id = questionary.select(
             "Which TV show?",
@@ -190,6 +191,9 @@ def add_tv_show(
                 for tv_show in search_results
             ],
         ).ask()
+
+    if tmdb_id is None:
+        raise click.ClickException("TMDB ID must be provided.")
 
     tv_show = tv_shows.tmdb_tv_show_data_to_dataclasses(
         *tv_shows.get_tv_show_data_from_tmdb(
@@ -322,7 +326,7 @@ def add_movie(
     if search_query is not None or tmdb_id is not None:
         search_results = movies.search_movies_on_tmdb(
             client=client,
-            query=search_query,
+            query=search_query or "",
         )
         tmdb_id = questionary.select(
             "Which movie?",
@@ -340,6 +344,9 @@ def add_movie(
         raise Exception(
             "MOVIES_DIR_PATH must be set in the configuration file."
         )
+
+    if tmdb_id is None:
+        raise click.ClickException("TMDB ID must be provided.")
 
     movie = movies.tmdb_move_data_to_movie(
         movies.get_movie_data_from_tmdb(movie_id=tmdb_id, client=client)
@@ -426,7 +433,7 @@ def add_vinyl(
     config: Config = ctx.obj["config"]
     client: DiscogsClient = ctx.obj["discogs_client"]
 
-    movies.ensure_required_movies_config(config)
+    movies.ensure_required_movies_config(config, write=write)
 
     # If no search query, barcode, or Discogs release ID is provided, prompt
     # the user for a search query.
