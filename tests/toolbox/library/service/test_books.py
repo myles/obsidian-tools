@@ -5,6 +5,7 @@ import responses
 
 from obsidian_tools.errors import ObsidianToolsConfigError
 from obsidian_tools.integrations.openlibrary import OpenLibraryClient
+from obsidian_tools.toolbox.library.models import Book, Person
 from obsidian_tools.toolbox.library.service import books
 
 
@@ -78,3 +79,51 @@ def test_get_book_data_from_openlibrary(
     assert len(authors) == 2
     assert resp_openlibrary_author in authors
     assert resp_openlibrary_author_two in authors
+
+
+def test_build_book_note():
+    book = Book(title="A Game of Thrones")
+
+    content = books.build_book_note(book)
+
+    assert (
+        content
+        == f"""---
+title: {book.title}
+type: book
+---"""
+    )
+
+
+def test_build_book_note__everything():
+    author = Person(name="George R.R. Martin")
+    book = Book(
+        title="A Game of Thrones",
+        authors=[author],
+        number_of_pages=694,
+        description="A Game of Thrones is the first novel in A Song of Ice and Fire, a series of fantasy novels by American author George R. R. Martin.",
+        isbn="9780553103540",
+        cover_url="https://example.com/book_jacket.jpg",
+        google_book_id="B_qNEAAAQBAJ",
+        openlibrary_book_id="OL26425339M",
+    )
+
+    content = books.build_book_note(book)
+    assert (
+        content
+        == f"""---
+title: {book.title}
+type: book
+authors: {book.display_authors}
+number_of_pages: {book.number_of_pages}
+isbn_13: '{book.isbn}'
+google_book_id: {book.google_book_id}
+openlibrary_book_id: {book.openlibrary_book_id}
+---
+
+<!-- GENERATED_START -->
+![{book.title}]({book.cover_url})
+
+{book.description}
+<!-- GENERATED_END -->"""
+    )

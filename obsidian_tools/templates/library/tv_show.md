@@ -2,6 +2,8 @@
 title: "{{ tv_show.name }}"
 type: "TV Show"
 tmdb_id: {{ tv_show.tmdb_id }}
+aliases:
+  - "{{ tv_show.name }} (TV Show)"
 ---
 
 ![{{ tv_show.name }}]({{ tv_show.cover_url }})

@@ -3,6 +3,7 @@ from typing import Union
 
 import click
 import questionary
+from requests import HTTPError, Timeout
 
 from obsidian_tools.config import Config
 from obsidian_tools.integrations import (
@@ -13,6 +14,8 @@ from obsidian_tools.integrations import (
     SteamClient,
     TMDBClient,
 )
+from obsidian_tools.integrations.igdb import CategoryEnum as IGDBCategoryEnum
+from obsidian_tools.toolbox.library.models import Book
 from obsidian_tools.toolbox.library.service import (
     books,
     core,
@@ -21,7 +24,7 @@ from obsidian_tools.toolbox.library.service import (
     video_games,
     vinyl_records,
 )
-from obsidian_tools.utils.click_utils import write_option
+from obsidian_tools.utils.click_utils import write_force_option, write_option
 from obsidian_tools.utils.dataclasses import merge_dataclasses
 
 
@@ -68,7 +71,8 @@ def cli(ctx) -> None:
 @click.pass_context
 @click.argument("isbn", type=str)
 @write_option
-def add_book(ctx: click.Context, isbn: str, write: bool) -> None:
+@write_force_option
+def add_book(ctx: click.Context, isbn: str, write: bool, force: bool) -> None:
     """
     Add a book to the Obsidian vault.
     """
@@ -76,33 +80,71 @@ def add_book(ctx: click.Context, isbn: str, write: bool) -> None:
     open_library_client: OpenLibraryClient = ctx.obj["openlibrary_client"]
     google_books_client: GoogleBooksClient = ctx.obj["google_books_client"]
 
-    books.ensure_required_books_config(config)
+    books.ensure_required_books_config(config, write)
 
-    books_dir_path: Union[Path, None] = config.BOOKS_DIR_PATH
-    if books_dir_path is None:
-        raise Exception("BOOKS_DIR_PATH must be set in the configuration file.")
+    # Attempt to get the book's data from Open Library and Google Books.
+    ol_book: Union[Book, None] = None
+    gb_book: Union[Book, None] = None
 
-    open_library_book = books.openlibrary_data_to_dataclass(
-        *books.get_book_data_from_openlibrary(
-            isbn=isbn, client=open_library_client
+    try:
+        book_data, works_data, authors_data = (
+            books.get_book_data_from_openlibrary(
+                isbn=isbn, client=open_library_client
+            )
         )
-    )
-
-    google_books_data = books.get_book_data_from_google_books(
-        isbn=isbn, client=google_books_client
-    )
-    if google_books_data is not None:
-        google_books_book = books.google_books_data_to_dataclass(
-            google_books_data
+        ol_book = books.openlibrary_data_to_dataclass(
+            book_data=book_data,
+            works_data=works_data,
+            authors_data=authors_data,
         )
-        book = merge_dataclasses(open_library_book, google_books_book)
+    except Timeout:
+        click.echo("Open Library request timed out.", err=True)
+    except HTTPError as http_error:
+        if http_error.response.status_code != 404:
+            raise http_error
+
+        click.echo("Book not found on Open Library.", err=True)
+
+    try:
+        book_data = books.get_book_data_from_google_books(
+            isbn=isbn, client=google_books_client
+        )
+        gb_book = books.google_books_data_to_dataclass(book_data)
+    except Timeout:
+        click.echo("Google Books request timed out.", err=True)
+    except HTTPError as http_error:
+        if http_error.response.status_code != 404:
+            raise http_error
+
+        click.echo("Book not found on Google Books.", err=True)
+
+    # If no book data is found, raise an exception.
+    if gb_book is None and ol_book is None:
+        raise click.ClickException("No book data found.")
+
+    # Merge the book data from Open Library and Google Books or use the data
+    # from one of the sources if the other is not available.
+    if gb_book is not None and ol_book is not None:
+        book = merge_dataclasses(ol_book, gb_book)
     else:
-        book = open_library_book
+        book = ol_book or gb_book
 
+    note_name = books.build_book_note_name(book=book)
     note_content = books.build_book_note(book=book)
+
     if write is True:
+        note_path = books.build_book_note_path(
+            note_name=note_name, config=config
+        )
+
+        if note_path.exists() is True and force is False:
+            click.confirm(
+                f"Note already exists at {note_path}. Overwrite?",
+                abort=True,
+            )
+
         note_file_path = books.write_book_note(
-            note_name=book.title,
+            note_path=note_path,
             note_content=note_content,
             config=config,
         )
@@ -113,26 +155,45 @@ def add_book(ctx: click.Context, isbn: str, write: bool) -> None:
 
 @cli.command()
 @click.pass_context
-@click.argument("tv_series_id", type=int)
+@click.argument("search_query", type=str, required=False)
+@click.option("--tmdb-id", type=int)
 @write_option
-def add_tv_show(ctx: click.Context, tv_series_id: int, write: bool) -> None:
+def add_tv_show(
+    ctx: click.Context,
+    search_query: Union[str, None],
+    tmdb_id: Union[int, None],
+    write: bool = False,
+) -> None:
     """
     Add a TV show to the Obsidian vault.
     """
     config: Config = ctx.obj["config"]
     client: TMDBClient = ctx.obj["tmdb_client"]
 
-    tv_shows.ensure_required_tv_shows_config(config)
+    tv_shows.ensure_required_tv_shows_config(config, write)
 
-    tv_shows_dir_path: Union[Path, None] = config.TV_SHOWS_DIR_PATH
-    if tv_shows_dir_path is None:
-        raise Exception(
-            "TV_SHOWS_DIR_PATH must be set in the configuration file."
+    if search_query is None and tmdb_id is None:
+        search_query = click.prompt("Enter a search query")
+
+    if search_query is not None or tmdb_id is not None:
+        search_results = tv_shows.search_tv_series_on_tmdb(
+            client=client,
+            query=search_query,
         )
+        tmdb_id = questionary.select(
+            "Which TV show?",
+            choices=[
+                questionary.Choice(
+                    title=f"{tv_show['name']} ({tv_show['first_air_date']})",
+                    value=tv_show["id"],
+                )
+                for tv_show in search_results
+            ],
+        ).ask()
 
     tv_show = tv_shows.tmdb_tv_show_data_to_dataclasses(
         *tv_shows.get_tv_show_data_from_tmdb(
-            tv_series_id=tv_series_id,
+            tv_series_id=tmdb_id,
             client=client,
         )
     )
@@ -209,18 +270,14 @@ def update_tv_shows(ctx: click.Context) -> None:
     config: Config = ctx.obj["config"]
     client: TMDBClient = ctx.obj["tmdb_client"]
 
-    tv_shows.ensure_required_tv_shows_config(config)
-
-    tv_shows_dir_path: Union[Path, None] = config.TV_SHOWS_DIR_PATH
-    if tv_shows_dir_path is None:
-        raise Exception(
-            "TV_SHOWS_DIR_PATH must be set in the configuration file."
-        )
+    tv_shows.ensure_required_tv_shows_config(config, write=True)
 
     for path, post in tv_shows.list_tv_show_paths(config, has_tmdb_id=True):
-        tv_series_data_from_tmdb, tv_seasons_data_from_tmdb = tv_shows.get_tv_show_data_from_tmdb(
-            tv_series_id=int(post["tmdb_id"]),
-            client=client,
+        tv_series_data_from_tmdb, tv_seasons_data_from_tmdb = (
+            tv_shows.get_tv_show_data_from_tmdb(
+                tv_series_id=int(post["tmdb_id"]),
+                client=client,
+            )
         )
         tv_show = tv_shows.tmdb_tv_show_data_to_dataclasses(
             tv_series=tv_series_data_from_tmdb,
@@ -240,37 +297,112 @@ def update_tv_shows(ctx: click.Context) -> None:
 
 @cli.command()
 @click.pass_context
-@click.argument("movie_id", type=int)
+@click.argument("search_query", type=str, required=False)
+@click.option("--tmdb-id", type=int)
 @write_option
-def add_movie(ctx: click.Context, movie_id: int, write: bool) -> None:
+def add_movie(
+    ctx: click.Context,
+    search_query: Union[str, None],
+    tmdb_id: Union[int, None],
+    write: bool = False,
+) -> None:
     """
     Add a Movie to the Obsidian vault.
     """
     config: Config = ctx.obj["config"]
     client: TMDBClient = ctx.obj["tmdb_client"]
 
-    movies.ensure_required_movies_config(config)
+    movies.ensure_required_movies_config(config=config, write=write)
+
+    # If no search query or TMDB ID is provided, prompt the user for a search
+    # query.
+    if search_query is None and tmdb_id is None:
+        search_query = click.prompt("Enter a search query")
+
+    if search_query is not None or tmdb_id is not None:
+        search_results = movies.search_movies_on_tmdb(
+            client=client,
+            query=search_query,
+        )
+        tmdb_id = questionary.select(
+            "Which movie?",
+            choices=[
+                questionary.Choice(
+                    title=f"{movie['title']} ({movie['release_date']})",
+                    value=movie["id"],
+                )
+                for movie in search_results
+            ],
+        ).ask()
 
     movies_dir_path: Union[Path, None] = config.MOVIES_DIR_PATH
-    if movies_dir_path is None:
+    if write is True and movies_dir_path is None:
         raise Exception(
-            "TV_SHOWS_DIR_PATH must be set in the configuration file."
+            "MOVIES_DIR_PATH must be set in the configuration file."
         )
 
     movie = movies.tmdb_move_data_to_movie(
-        movies.get_movie_data_from_tmdb(movie_id=movie_id, client=client)
+        movies.get_movie_data_from_tmdb(movie_id=tmdb_id, client=client)
     )
 
     note_name = movies.build_movie_note_name(movie=movie)
     note_content = movies.build_movie_note(movie=movie)
 
     if write is True:
-        note_file_path = movies.write_movie_note(
-            note_name=note_name,
+        note_path = movies.build_movie_note_path(
+            note_name=note_name, config=config
+        )
+
+        if note_path.exists() is True:
+            existing_note = movies.load_movie_note(note_path)
+
+            if movies.is_same_movie(movie, existing_note) is False:
+                alt_note_names = movies.list_alternative_note_names(
+                    movie, config=config
+                )
+                try:
+                    selection = next(
+                        filter(lambda x: x["is_same"], alt_note_names)
+                    )
+                    note_path = selection["path"]
+                except StopIteration:
+                    alt_note_name = questionary.select(
+                        f"Movie note already exists at {note_path}. What would you like to do?",
+                        choices=[
+                            *[
+                                questionary.Choice(
+                                    title=alt_note_name["name"],
+                                    value=alt_note_name["name"],
+                                    disabled=(
+                                        "already exists"
+                                        if alt_note_name["does_exist"]
+                                        else None
+                                    ),
+                                )
+                                for alt_note_name in alt_note_names
+                            ],
+                            questionary.Separator(),
+                            questionary.Choice(title="Overwrite"),
+                        ],
+                    ).ask()
+
+                    if alt_note_name == "Overwrite":
+                        click.confirm(
+                            "Are you sure you want to overwrite the existing note?",
+                            abort=True,
+                        )
+                    else:
+                        note_path = movies.build_movie_note_path(
+                            note_name=alt_note_name, config=config
+                        )
+
+        movies.write_movie_note(
+            note_path=note_path,
             note_content=note_content,
             config=config,
         )
-        return click.echo(f"Movie written to {note_file_path}")
+
+        return click.echo(f"Movie written to {note_path}")
 
     return click.echo(note_content)
 
@@ -354,12 +486,14 @@ def add_vinyl(
 @click.option("--igdb-id", type=int)
 @click.option("--steam-id", type=str)
 @write_option
+@write_force_option
 def add_video_game(
     ctx: click.Context,
     search_query: Union[str, None],
     igdb_id: Union[int, None],
     steam_id: Union[str, None],
     write: bool,
+    force: bool,
 ) -> None:
     """
     Add a video game to the Obsidian vault.
@@ -397,11 +531,22 @@ def add_video_game(
             )
         )
     elif steam_id is not None:
-        video_game = video_games.steam_data_to_dataclass(
+        steam_video_game = video_games.steam_data_to_dataclass(
             video_games.get_game_data_from_steam(
                 client=steam_client, app_id=steam_id
             )
         )
+        igdb_game_id = video_games.get_igdb_game_id_from_external_game_id(
+            client=igdb_client,
+            external_game_id=steam_id,
+            category=IGDBCategoryEnum.STEAM,
+        )
+        igdb_video_game = video_games.igdb_data_to_dataclass(
+            *video_games.get_game_data_from_igdb(
+                client=igdb_client, game_id=igdb_game_id
+            )
+        )
+        video_game = merge_dataclasses(igdb_video_game, steam_video_game)
     else:
         raise click.ClickException("IGDB ID or Steam ID must be provided.")
 
@@ -411,11 +556,62 @@ def add_video_game(
     )
 
     if write is True:
-        note_file_path = video_games.write_video_game(
+        note_path = video_games.build_video_game_note_path(
             note_name=note_name,
+            config=config,
+        )
+
+        if note_path.exists() is True:
+            existing_note = video_games.load_video_game(note_path)
+
+            if (
+                video_games.is_same_video_game(video_game, existing_note)
+                is False
+            ):
+                alt_note_names = video_games.list_alternative_note_names(
+                    video_game, config=config
+                )
+                try:
+                    selection = next(
+                        filter(lambda x: x["is_same"], alt_note_names)
+                    )
+                    note_path = selection["path"]
+                except StopIteration:
+                    alt_note_name = questionary.select(
+                        f"Video game note already exists at {note_path}. What would you like to do?",
+                        choices=[
+                            *[
+                                questionary.Choice(
+                                    title=alt_note_name["name"],
+                                    value=alt_note_name["name"],
+                                    disabled=(
+                                        "already exists"
+                                        if alt_note_name["does_exist"]
+                                        else None
+                                    ),
+                                )
+                                for alt_note_name in alt_note_names
+                            ],
+                            questionary.Separator(),
+                            questionary.Choice(title="Overwrite"),
+                        ],
+                    ).ask()
+
+                    if alt_note_name == "Overwrite":
+                        click.confirm(
+                            "Are you sure you want to overwrite the existing note?",
+                            abort=True,
+                        )
+                    else:
+                        note_path = video_games.build_video_game_note_path(
+                            note_name=alt_note_name, config=config
+                        )
+
+        video_games.write_video_game(
+            note_path=note_path,
             note_content=note_content,
             config=config,
         )
-        return click.echo(f"Video game written to {note_file_path}")
+        return click.echo(f"Video game written to {note_path}")
 
     return click.echo(note_content)

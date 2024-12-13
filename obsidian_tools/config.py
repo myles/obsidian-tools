@@ -70,6 +70,9 @@ class Config:
     VIDEO_GAMES_DIR_PATH: Optional[Path] = None
     VINYL_RECORDS_DIR_PATH: Optional[Path] = None
 
+    # Roam Research migration configuration
+    MIGRATED_ROAM_RESEARCH_NOTES_PATH: Optional[Path] = None
+
     @classmethod
     def from_file(cls, config_file_path: Path):
         config = {}
@@ -111,6 +114,12 @@ class Config:
         for key in transform_to_path_library_keys:
             if key in config:
                 config[key] = config["LIBRARY_DIR_PATH"] / config[key]
+
+        # Roam Research migration configuration
+        if "MIGRATED_ROAM_RESEARCH_NOTES_PATH" in config:
+            config["MIGRATED_ROAM_RESEARCH_NOTES_PATH"] = Path(
+                config["MIGRATED_ROAM_RESEARCH_NOTES_PATH"]
+            )
 
         safe_keys = list(cls.__annotations__.keys())
         to_remove = [key for key in config.keys() if key not in safe_keys]

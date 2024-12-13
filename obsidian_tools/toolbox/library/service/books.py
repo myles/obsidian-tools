@@ -1,6 +1,6 @@
 import logging
+import typing as t
 from pathlib import Path
-from typing import Any, Dict, Generator, List, Optional, Tuple, Union
 
 import frontmatter
 from sanitize_filename import sanitize
@@ -14,20 +14,34 @@ from obsidian_tools.utils.template import render_template
 logger = logging.getLogger(__name__)
 
 
-def ensure_required_books_config(config: Config) -> bool:
+def ensure_required_books_config(config: Config, write: bool) -> bool:
     """
     Ensure that the required configuration values for books are set.
     """
-    if config.BOOKS_DIR_PATH is None or config.BOOKS_DIR_PATH.exists() is False:
+    if write is True and (
+        config.BOOKS_DIR_PATH is None or config.BOOKS_DIR_PATH.exists() is False
+    ):
         raise ObsidianToolsConfigError("BOOKS_DIR_PATH")
 
     return True
 
 
+def search_books_on_google_boocks(
+    client: GoogleBooksClient, query: str
+) -> t.List[t.Dict[str, t.Any]]:
+    """
+    Search for a tv-series on TMDB.
+    """
+    _, resp = client.search_books(query=query)
+    return resp.json()["items"]
+
+
 def get_book_data_from_openlibrary(
     isbn: str,
     client: OpenLibraryClient,
-) -> Tuple[Dict[str, Any], List[Dict[str, Any]], List[Dict[str, Any]]]:
+) -> t.Tuple[
+    t.Dict[str, t.Any], t.List[t.Dict[str, t.Any]], t.List[t.Dict[str, t.Any]]
+]:
     """
     Get the book data from Open Library.
     """
@@ -59,7 +73,7 @@ def get_book_data_from_openlibrary(
 def get_book_data_from_google_books(
     isbn: str,
     client: GoogleBooksClient,
-) -> Union[Dict[str, Any], None]:
+) -> t.Union[t.Dict[str, t.Any], None]:
     """
     Get the book data from Google Books.
     """
@@ -78,8 +92,8 @@ def get_book_data_from_google_books(
 
 
 def get_openlibrary_work_description(
-    works_data: List[Dict[str, Any]]
-) -> Optional[str]:
+    works_data: t.List[t.Dict[str, t.Any]]
+) -> t.Optional[str]:
     """
     Get the description from an Open Library work.
 
@@ -101,9 +115,9 @@ def get_openlibrary_work_description(
 
 
 def openlibrary_data_to_dataclass(
-    book_data: Dict[str, Any],
-    works_data: List[Dict[str, Any]],
-    authors_data: List[Dict[str, Any]],
+    book_data: t.Dict[str, t.Any],
+    works_data: t.List[t.Dict[str, t.Any]],
+    authors_data: t.List[t.Dict[str, t.Any]],
 ) -> Book:
     """
     Convert the Open Library book data to a Book dataclass.
@@ -132,7 +146,7 @@ def openlibrary_data_to_dataclass(
     )
 
 
-def google_books_data_to_dataclass(book_data: Dict[str, Any]) -> Book:
+def google_books_data_to_dataclass(book_data: t.Dict[str, t.Any]) -> Book:
     """
     Convert the Google Books book data to a Book dataclass.
     """
@@ -183,16 +197,68 @@ def google_books_data_to_dataclass(book_data: Dict[str, Any]) -> Book:
     )
 
 
+def build_book_note_name(book: Book) -> str:
+    """
+    Build the name for a book note.
+    """
+    return f"{book.title}"
+
+
+def build_book_note_metadata(book: Book) -> t.Dict[str, t.Any]:
+    """
+    Build the metadata for a book note.
+    """
+    metadata = {"title": book.title, "type": "Book", "aliases": [book.title]}
+
+    if book.authors:
+        metadata["authors"] = book.display_authors
+
+    if book.number_of_pages:
+        metadata["number_of_pages"] = book.number_of_pages
+
+    if book.isbn:
+        metadata["isbn_13"] = book.isbn
+
+    if book.google_book_id:
+        metadata["google_book_id"] = book.google_book_id
+
+    if book.openlibrary_book_id:
+        metadata["openlibrary_book_id"] = book.openlibrary_book_id
+
+    return metadata
+
+
+def build_book_note_content(book: Book) -> str:
+    """
+    Build the content for a book note.
+    """
+    content = render_template("library/book.md", book=book).strip()
+    if not content:
+        return ""
+
+    return content
+
+
 def build_book_note(book: Book) -> str:
     """
     Build the note for a book.
     """
-    content = render_template("library/book.md", book=book)
-    return content.strip()
+    content = build_book_note_content(book)
+    metadata = build_book_note_metadata(book)
+
+    post = frontmatter.Post(content=content, **metadata)
+    return frontmatter.dumps(post, sort_keys=False)
+
+
+def build_book_note_path(note_name: str, config: Config) -> Path:
+    """
+    Build the path for a book note.
+    """
+    return config.BOOKS_DIR_PATH / (sanitize(note_name) + ".md")
 
 
 def write_book_note(
-    note_name: str,
+    note_path: Path,
     note_content: str,
     config: Config,
 ) -> Path:
@@ -206,13 +272,10 @@ def write_book_note(
             "BOOKS_DIR_PATH must be set in the configuration file."
         )
 
-    file_name = sanitize(note_name) + ".md"
-    file_path = config.BOOKS_DIR_PATH / file_name
+    with note_path.open("w") as note_file_obj:
+        note_file_obj.write(note_content)
 
-    with file_path.open("w") as file_obj:
-        file_obj.write(note_content)
-
-    return file_path
+    return note_path
 
 
 def load_book_note(file_path: Path) -> frontmatter.Post:
@@ -220,13 +283,27 @@ def load_book_note(file_path: Path) -> frontmatter.Post:
     Load a book note.
     """
     with file_path.open("r") as file_obj:
-        post = frontmatter.loads(file_obj.read())
+        post = frontmatter.load(file_obj)
     return post
+
+
+def is_same_book(book: Book, post: frontmatter.Post) -> bool:
+    """
+    Check if the book and the post are the same.
+    """
+    if "isbn_13" in post:
+        return book.isbn == str(post["isbn_13"])
+    elif "google_book_id" in post:
+        return book.google_book_id == str(post["google_book_id"])
+    elif "openlibrary_book_id" in post:
+        return book.openlibrary_book_id == str(post["openlibrary_book_id"])
+
+    return False
 
 
 def list_books_path(
     config: Config,
-) -> Generator[Tuple[Path, frontmatter.Post], None, None]:
+) -> t.Generator[t.Tuple[Path, frontmatter.Post], None, None]:
     """
     List the paths of book notes.
     """

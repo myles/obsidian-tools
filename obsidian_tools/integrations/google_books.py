@@ -10,12 +10,18 @@ class GoogleBooksClient(HttpClient):
         super().__init__()
         self.base_url = "https://www.googleapis.com/books/v1"
 
+    def search_books(self, query: str) -> RequestReturn:
+        """
+        Search for books in the Google Books API.
+        """
+        request, response = self.get(
+            f"{self.base_url}/volumes", params={"q": query}
+        )
+        response.raise_for_status()
+        return request, response
+
     def get_book_by_isbn(self, isbn: str) -> RequestReturn:
         """
         Get a book from the Google Books API using its ISBN.
         """
-        request, response = self.get(
-            f"{self.base_url}/volumes", params={"q": f"isbn:{isbn}"}
-        )
-        response.raise_for_status()
-        return request, response
+        return self.search_books(f"isbn:{isbn}")

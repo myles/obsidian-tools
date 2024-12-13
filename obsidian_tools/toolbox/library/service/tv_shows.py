@@ -1,6 +1,7 @@
 import datetime
-from pathlib import Path
 import typing as t
+from pathlib import Path
+
 import frontmatter
 from sanitize_filename import sanitize
 
@@ -12,11 +13,11 @@ from obsidian_tools.utils.humanize import and_join
 from obsidian_tools.utils.template import render_template
 
 
-def ensure_required_tv_shows_config(config: Config) -> bool:
+def ensure_required_tv_shows_config(config: Config, write: bool) -> bool:
     """
     Ensure that the required configuration values for TV shows are set.
     """
-    if (
+    if write is True and (
         config.TV_SHOWS_DIR_PATH is None
         or config.TV_SHOWS_DIR_PATH.exists() is False
     ):
@@ -26,6 +27,16 @@ def ensure_required_tv_shows_config(config: Config) -> bool:
         raise ObsidianToolsConfigError("TMDB_API_KEY")
 
     return True
+
+
+def search_tv_series_on_tmdb(
+    client: TMDBClient, query: str
+) -> t.List[t.Dict[str, t.Any]]:
+    """
+    Search for a tv-series on TMDB.
+    """
+    _, resp_movies = client.search_tv_series(query=query)
+    return resp_movies.json()["results"]
 
 
 def get_tv_show_season_data_from_tmdb(
@@ -225,7 +236,7 @@ def list_tv_show_paths(
     has_tmdb_id: bool = False,
 ) -> t.Generator[t.Tuple[Path, frontmatter.Post], None, None]:
     """
-    t.List the paths of TV show notes.
+    List the paths of TV show notes.
     """
     # This is just a sanity check. The ensure_required_tv_shows_config function
     # should catch this.

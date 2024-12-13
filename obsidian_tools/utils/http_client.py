@@ -1,6 +1,6 @@
 from enum import Enum
 from importlib.metadata import version
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Union
 
 from requests import PreparedRequest, Request, Response, Session
 from requests.auth import AuthBase
@@ -42,8 +42,11 @@ class HttpClient:
         headers: Optional[Dict[str, str]] = None,
         params: Optional[Dict[str, str]] = None,
         stream: bool = False,
+        timeout: Union[int, Tuple[int, int], None] = None,
         **kwargs,
     ) -> RequestReturn:
+        timeout = timeout or (5, 30)
+
         request = Request(
             method=str(method.value),
             url=url,
@@ -52,7 +55,9 @@ class HttpClient:
             **kwargs,
         )
         prepare_request = self.session.prepare_request(request)
-        response = self.session.send(prepare_request, stream=stream)
+        response = self.session.send(
+            prepare_request, stream=stream, timeout=timeout
+        )
         return prepare_request, response
 
     def get(self, url: str, **kwargs) -> RequestReturn:

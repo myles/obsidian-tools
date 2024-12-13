@@ -1,7 +1,38 @@
+from enum import Enum
+from typing import Iterable
+
 from requests import Session
 from requests.auth import AuthBase
 
 from obsidian_tools.utils.http_client import HttpClient, RequestReturn
+
+
+class CategoryEnum(Enum):
+    STEAM = 1
+    GOG = 5
+    YOUTUBE = 10
+    MICROSOFT = 11
+    APPLE = 13
+    TWITCH = 14
+    ANDROID = 15
+    AMAZON_ASIN = 20
+    AMAZON_LUNA = 22
+    AMAZON_ADG = 23
+    EPIC_GAME_STORE = 26
+    OCULUS = 28
+    UTOMIK = 29
+    ITCH_IO = 30
+    XBOX_MARKETPLACE = 31
+    KARTRIDGE = 32
+    PLAYSTATION_STORE_US = 36
+    FOCUS_ENTERTAINMENT = 37
+    XBOX_GAME_PASS_ULTIMATE_CLOUD = 54
+    GAMEJOLT = 55
+
+
+class MediaEnum(Enum):
+    DIGITAL = 1
+    PHYSICAL = 2
 
 
 class IGDBAuth(AuthBase):
@@ -81,12 +112,40 @@ class IGDBClient(HttpClient):
 
         return request, response
 
+    def get_game_by_external_game_id(
+        self, game_id: str, category: CategoryEnum
+    ) -> RequestReturn:
+        """
+        Get the details of a game by its external game ID.
+        """
+        url = f"{self.base_url}/games"
+        data = f'fields *; where external_games.category = {category.value} & external_games.uid = "{game_id}";'
+
+        request, response = self.post(url, data=data)
+        response.raise_for_status()
+
+        return request, response
+
     def get_cover(self, cover_id: int) -> RequestReturn:
         """
         Get the cover of a game.
         """
         url = f"{self.base_url}/covers"
         data = f"fields *; where id = {cover_id};"
+
+        request, response = self.post(url, data=data)
+        response.raise_for_status()
+
+        return request, response
+
+    def get_external_game(
+        self, external_game_ids: Iterable[int]
+    ) -> RequestReturn:
+        """
+        Get the external game data.
+        """
+        url = f"{self.base_url}/external_games"
+        data = f"fields *; where id = ({','.join(str(i) for i in external_game_ids)});"
 
         request, response = self.post(url, data=data)
         response.raise_for_status()

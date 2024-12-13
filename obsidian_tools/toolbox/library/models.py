@@ -9,6 +9,12 @@ from obsidian_tools.utils.humanize import and_join
 class Person:
     name: str
 
+    def __eq__(self, other):
+        return self.name == other.name
+
+    def __hash__(self):
+        return hash(self.name)
+
 
 @dataclass
 class Book:
@@ -28,6 +34,26 @@ class Book:
     def display_authors(self) -> str:
         return and_join([author.name for author in self.authors])
 
+    def __eq__(self, other):
+        if self.isbn and other.isbn:
+            return self.isbn == other.isbn
+        elif self.google_book_id and other.google_book_id:
+            return self.google_book_id == other.google_book_id
+        elif self.openlibrary_book_id and other.openlibrary_book_id:
+            return self.openlibrary_book_id == other.openlibrary_book_id
+
+        return False
+
+    def __hash__(self):
+        if self.isbn:
+            return hash(self.isbn)
+        elif self.google_book_id:
+            return hash(self.google_book_id)
+        elif self.openlibrary_book_id:
+            return hash(self.openlibrary_book_id)
+
+        return hash(self.title)
+
 
 @dataclass
 class Movie:
@@ -36,6 +62,9 @@ class Movie:
     tagline: Optional[str] = None
     description: Optional[str] = None
     cover_url: Optional[str] = None
+
+    release_date: Optional[datetime.date] = None
+    production_countries: List[str] = field(default_factory=list)
 
     # Source-specific identifiers.
     tmdb_id: Optional[str] = None
@@ -92,6 +121,8 @@ class VideoGame:
     title: str
     description: Optional[str] = None
     cover_url: Optional[str] = None
+
+    first_release_date: Optional[datetime.date] = None
 
     # Source-specific identifiers.
     igdb_id: Optional[str] = None
