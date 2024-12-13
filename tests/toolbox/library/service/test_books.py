@@ -10,17 +10,21 @@ from obsidian_tools.toolbox.library.service import books
 
 
 def test_ensure_required_books_config(mock_config):
-    good_config = replace(
+    config = replace(
         mock_config,
         BOOKS_DIR_PATH=mock_config.VAULT_PATH / "library" / "books",
     )
-    assert books.ensure_required_books_config(good_config) is True
+    result = books.ensure_required_books_config(config, write=True)
+    assert result is True
 
-    bad_config = replace(mock_config, BOOKS_DIR_PATH=None)
+    config_without_book_dir_path = replace(mock_config, BOOKS_DIR_PATH=None)
     with pytest.raises(ObsidianToolsConfigError) as exc_info:
-        books.ensure_required_books_config(bad_config)
+        books.ensure_required_books_config(config_without_book_dir_path, write=True)
 
     assert str(exc_info.value.config_key) == "BOOKS_DIR_PATH"
+
+    result = books.ensure_required_books_config(config, write=False)
+    assert result is True
 
 
 @responses.activate
@@ -90,7 +94,9 @@ def test_build_book_note():
         content
         == f"""---
 title: {book.title}
-type: book
+type: Book
+aliases:
+- {book.title}
 ---"""
     )
 
@@ -113,7 +119,9 @@ def test_build_book_note__everything():
         content
         == f"""---
 title: {book.title}
-type: book
+type: Book
+aliases:
+- {book.title}
 authors: {book.display_authors}
 number_of_pages: {book.number_of_pages}
 isbn_13: '{book.isbn}'
@@ -121,9 +129,7 @@ google_book_id: {book.google_book_id}
 openlibrary_book_id: {book.openlibrary_book_id}
 ---
 
-<!-- GENERATED_START -->
 ![{book.title}]({book.cover_url})
 
-{book.description}
-<!-- GENERATED_END -->"""
+{book.description}"""
     )
