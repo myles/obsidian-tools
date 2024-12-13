@@ -23,8 +23,10 @@ from obsidian_tools.plugins import daily_notes
             "YYYY/C\\W WW/E - dddd/YYYY-MM-DD",
             "Bullet Journal/Daily Logs",
             datetime.date(2022, 1, 1),
-            Path("/tmp/vault/Bullet Journal/Daily Logs/2022/CW 52/6 - Saturday/2022-01-01.md"),
-        )
+            Path(
+                "/tmp/vault/Bullet Journal/Daily Logs/2022/CW 52/6 - Saturday/2022-01-01.md"
+            ),
+        ),
     ),
 )
 def test_get_path_for_daily_note(

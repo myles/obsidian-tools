@@ -19,7 +19,9 @@ def test_ensure_required_books_config(mock_config):
 
     config_without_book_dir_path = replace(mock_config, BOOKS_DIR_PATH=None)
     with pytest.raises(ObsidianToolsConfigError) as exc_info:
-        books.ensure_required_books_config(config_without_book_dir_path, write=True)
+        books.ensure_required_books_config(
+            config_without_book_dir_path, write=True
+        )
 
     assert str(exc_info.value.config_key) == "BOOKS_DIR_PATH"
 
