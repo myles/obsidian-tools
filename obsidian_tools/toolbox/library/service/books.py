@@ -208,7 +208,11 @@ def build_book_note_metadata(book: Book) -> t.Dict[str, t.Any]:
     """
     Build the metadata for a book note.
     """
-    metadata: t.Dict[str, t.Any] = {"title": book.title, "type": "Book", "aliases": [book.title]}
+    metadata: t.Dict[str, t.Any] = {
+        "title": book.title,
+        "type": "Book",
+        "aliases": [book.title],
+    }
 
     if book.authors:
         metadata["authors"] = book.display_authors
