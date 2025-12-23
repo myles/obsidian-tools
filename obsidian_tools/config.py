@@ -46,6 +46,11 @@ class Config:
     VAULT_PATH: Path
     OBSIDIAN: ObsidianConfig
 
+    # OpenAI configuration
+    OPENAI_API_KEY: Optional[str] = None
+    OPENAI_ORGANIZATION_ID: Optional[str] = None
+    OPENAI_PROJECT_ID: Optional[str] = None
+
     # BuJo configuration
     MONTHLY_NOTE_FORMAT: Optional[str] = None
     MONTHLY_NOTE_FOLDER: Optional[Path] = None
